@@ -1,0 +1,27 @@
+
+/* Custom container for DatePicker */
+.custom-datepicker-container {
+ /* width: '10px'; */
+  padding: 20px;
+  margin-bottom: 20px;
+  /* background-color: #f9f9f9; */
+  /* border-radius: 5px; */
+  /* box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1); */
+}
+
+/* Custom input styles */
+.custom-datepicker-input {
+  /* width: 100%; */
+  /* height: 40px; */
+  font-size: 16px;
+  padding: 8px;
+  /* border: 1px solid #ccc; */
+  /* border-radius: 5px; */
+  /* box-sizing: border-box; */
+}
+
+.custom-datepicker-input:focus {
+  border-color: #1976d2; /* On focus, apply Material-UI blue color */
+  outline: none;
+  /* box-shadow: 0 0 4px rgba(25, 118, 210, 0.5); */
+}

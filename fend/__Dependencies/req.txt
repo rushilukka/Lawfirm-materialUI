@@ -1,0 +1,20 @@
+npx create-react-app fend
+npm install @mui/material @emotion/react @emotion/styled
+npm install react-icons
+npm install @mui/icons-material
+npm install web-vitals
+npm install @emotion/react @emotion/styled
+npm install react-router-dom
+npm  i react-datepicker
+npm install @fontsource/roboto @fontsource/merriweather
+
+
+--------------
+npm install @mui/x-date-pickers
+npm install @mui/x-date-pickers date-fns
+
+npm uninstall @mui/x-date-pickers date-fns
+===================================
+npm cache clean --force
+rm -r node_modules   
+npm i         
