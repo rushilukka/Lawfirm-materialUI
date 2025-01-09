@@ -13,8 +13,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}> {/* Apply the theme globally */}
       <Router>
+         
         <Navbar /> {/* Add Navbar for navigation */}
-        <Routes>
+         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/services" element={<Services />} />

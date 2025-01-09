@@ -75,6 +75,22 @@ const Booking = () => {
   };
 
   const handleChange = (event) => {
+
+       const { name, value } = event.target;
+    
+      // Validate phone number
+      if (name === 'phone') {
+        if (!/^\d{0,10}$/.test(value)) {
+          return; // Prevent invalid input (more than 10 digits or non-numeric characters)
+        }
+    
+    
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    };
+    
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
@@ -120,11 +136,19 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if(formData.slot==="") {setDispMsg("Please select slot")}
-    else{
-
-    
-    // setDispMsg("");
+  
+    // Check if the phone number is valid
+    if (!/^\d{10}$/.test(formData.phone)) {
+      setDispMsg("Phone number must be exactly 10 digits.");
+      return;
+    }
+  
+    if (formData.slot === "") {
+      setDispMsg("Please select a slot.");
+      return;
+    }
+  
+    // Proceed with the rest of the submission logic
     formData.date = filterDate(formData.date);
     try {
       const response = await fetch("http://localhost:5000/booking", {
@@ -134,12 +158,12 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
         },
         body: JSON.stringify(formData),
       });
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
-      }
-      else {
-        //set data default
-        setFormData((prevData) => ({
+      } else {
+        // Reset form data after successful submission
+        setFormData({
           name: '',
           email: '',
           phone: '',
@@ -149,19 +173,17 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
           pincode: '',
           serviceType: '',
           caseBrief: '',
-        }));  
+        });
         setDispMsg("");
       }
+  
       const res = await response.json();
-      if(response.ok) setDispMsg("Booking Done !");
-      //can add payment gateway
-    } 
-    catch (error) {
+      if (response.ok) setDispMsg("Booking Done!");
+    } catch (error) {
       console.error("There has been a problem with your fetch operation:", error);
     }
-
-  }
   };
+  
 //--------------Slot check avaialble------------------------
   const handleSlotChange = (newSlot) => {
     setFormData((prevData) => ({
