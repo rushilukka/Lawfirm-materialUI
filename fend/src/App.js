@@ -12,6 +12,7 @@ import Footer from './cmp/Footer';
 function App() {
   return (
     <ThemeProvider theme={theme}> {/* Apply the theme globally */}
+      
       <Router>
          
         <Navbar /> {/* Add Navbar for navigation */}

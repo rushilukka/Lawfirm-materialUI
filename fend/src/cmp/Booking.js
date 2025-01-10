@@ -102,6 +102,12 @@ const Booking = () => {
       ...prevData,
       date: newDate, // Update the date field in the form data
     }));
+    
+   
+      // Call GetAvailableSlot after updating the date
+      GetAvailableSlot(newDate);
+
+  
     // updateAvailableSlot();
   };
 
