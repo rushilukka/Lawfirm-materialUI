@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { brown } from '@mui/material/colors';
 import logo from './img/logo-adv1.png'
 // import logo from './img/logo.png'
-
+import Disclaimer from './Disclaimer';
 // import * as React from 'react';
 import Stack from '@mui/material/Stack';
 // import Button from '@mui/material/Button';
@@ -148,8 +148,8 @@ const Navbar = () => {
              <Button
               color="inherit"
               variant="contained"
-              component={Link}
-              to="/disclaimer"
+              component={Disclaimer}
+              
               style={{
                 marginRight:'3px',
                 marginTop:'10px',
