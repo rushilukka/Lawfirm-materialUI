@@ -2,63 +2,83 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Button, Container, Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { brown } from '@mui/material/colors';
+import logo from './img/logo-adv1.png'
+// import logo from './img/logo.png'
+
+// import * as React from 'react';
+import Stack from '@mui/material/Stack';
+// import Button from '@mui/material/Button';
+import EmailIcon from '@mui/icons-material/Email';
+import CallIcon from '@mui/icons-material/Call';
+import BalanceIcon from '@mui/icons-material/Balance';
 
 const Navbar = () => {
   const theme = useTheme();
 
   return (
+    <>
     <AppBar position="sticky" color="primary" elevation={4}>
-      <Toolbar  style={{ minHeight: '100px' }}> {/* Increase height here */}
-        <Container className='row'           maxWidth="lg"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            backgroundColor:'ActiveBorder'
-          }}
-        >
+      <Toolbar  style={{ height: '170px' }}> {/* Increase height here */}
+           
           {/* Image Logo */}
           <Box
+            className='col-md-3'
             component={Link}
             to="/"
             style={{
+              height:'100%',
               display: 'flex',
               alignItems: 'center',
               textDecoration: 'none',
-              backgroundColor:'ButtonFace'
+             
             }}
           >
             <img
-              src="/" // Replace with your logo image path
+              src={logo} // Replace with your logo image path
               alt="Law Firm Logo"
               style={{
-                height: '40px', // Adjust the height to your preference
+                height: '100%',
+                width:'50%' ,// Adjust the height to your preference
                 marginRight: '0.5rem',
               }}
             />
-          </Box>
-
+           
+            <h1 style={{color:'white'}}>Vidhigna Law Firm</h1>
+           </Box>
+        
+           <Box className='col-md-9' style={{ borderLeft: '1px solid white', 
+             }}>
+               
           {/* Contact Information */}
-          <Box
-           style={{  backgroundColor:"GrayText",
-           display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <Typography variant="body2" color="inherit">
-              📞 +1 (234) 567-8901 {/* Replace with your phone number */}
+          <Box 
+           style={{  
+            borderBottom:'1px solid white',
+
+            marginTop:'10px',
+            marginLeft:'10px',
+            marginBottom:'20px',
+            display: 'flex', alignItems: 'center', gap: '2rem' }}>
+            <Typography variant="body1" color="inherit">
+              <CallIcon/> +91 9428669847 {/* Replace with your phone number */}
             </Typography>
-            <Typography variant="body2" color="inherit">
-              ✉️ info@lawfirm.com {/* Replace with your email */}
+            <Typography variant="body1  " color="inherit">
+              <EmailIcon/> info@lawfirm.com {/* Replace with your email */}
             </Typography>
           </Box>
 
           {/* Navbar Links */}
-          <Box style={{  backgroundColor:'ButtonHighlight',display: 'flex', gap: '1rem' }}>
+          <Box style={{  margin:'5px',display: 'flex',  justifyContent: 'flex-end', gap: '1rem' }}>
+           
             <Button
               color="inherit"
-              component={Link}
+              variant="outlined"
+               component={Link}
               to="/"
               sx={{
                 textTransform: 'capitalize',
-                fontWeight: 500,
+                fontWeight: 1000,
+                
                 '&:hover': {
                   color: theme.palette.accent.main, // Gold for hover
                   transform: 'scale(1.1)',
@@ -69,12 +89,13 @@ const Navbar = () => {
               Home
             </Button>
             <Button
+            variant="outlined"
               color="inherit"
               component={Link}
               to="/about"
               sx={{
                 textTransform: 'capitalize',
-                fontWeight: 500,
+                fontWeight: 1000,
                 '&:hover': {
                   color: theme.palette.accent.main,
                   transform: 'scale(1.1)',
@@ -85,12 +106,13 @@ const Navbar = () => {
               About Us
             </Button>
             <Button
+            variant="outlined"
               color="inherit"
               component={Link}
               to="/services"
               sx={{
                 textTransform: 'capitalize',
-                fontWeight: 500,
+                fontWeight: 1000,
                 '&:hover': {
                   color: theme.palette.accent.main,
                   transform: 'scale(1.1)',
@@ -101,12 +123,13 @@ const Navbar = () => {
               Services
             </Button>
             <Button
+            variant="outlined"
               color="inherit"
               component={Link}
               to="/book-slot"
               sx={{
                 textTransform: 'capitalize',
-                fontWeight: 500,
+                fontWeight: 1000,
                 '&:hover': {
                   color: theme.palette.accent.main,
                   transform: 'scale(1.1)',
@@ -119,44 +142,47 @@ const Navbar = () => {
           </Box>
 
           {/* Disclaimer and Login/Signup Buttons */}
-          <Box style={{  backgroundColor:'AppWorkspace',display: 'flex', gap: '1rem' }}>
-            <Button
+          <Box style={{  height:'40%',display: 'flex',justifyContent: 'flex-end' }}>
+ 
+
+             <Button
               color="inherit"
+              variant="contained"
               component={Link}
               to="/disclaimer"
+              style={{
+                marginRight:'3px',
+                marginTop:'10px',
+                // marginBottom:'10px',
+                border:'2px black',
+                color:'black',
+                backgroundColor:'gold',
+                height:'100%',
+              }}
               sx={{
                 textTransform: 'capitalize',
-                fontWeight: 500,
+                fontWeight: 1000,
                 '&:hover': {
-                  color: theme.palette.accent.main,
+                  color: 'black',
                   transform: 'scale(1.1)',
-                },
+                },  
                 transition: 'all 0.3s ease-in-out',
               }}
             >
               Disclaimer
             </Button>
-            <Button
-              color="inherit"
-              component={Link}
-              to="/login-signup"
-              sx={{
-                textTransform: 'capitalize',
-                fontWeight: 500,
-                '&:hover': {
-                  color: theme.palette.accent.main,
-                  transform: 'scale(1.1)',
-                },
-                transition: 'all 0.3s ease-in-out',
-              }}
-            >
-              Login / Signup
-            </Button>
+            
+           </Box>
+
           </Box>
-        </Container>
+
+        {/* </Container> */}
       </Toolbar>
+
     </AppBar>
-  );
+     
+</>
+);
 };
 
 export default Navbar;
