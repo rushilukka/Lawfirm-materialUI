@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { brown } from '@mui/material/colors';
 import logo from './img/logo-adv1.png'
 // import logo from './img/logo.png'
-import Disclaimer from './Disclaimer';
+import Disclaimer from './Popup-Disclaimer';
 // import * as React from 'react';
 import Stack from '@mui/material/Stack';
 // import Button from '@mui/material/Button';

@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Booking.css'
 import BookingSlot from './Booking-Slot'
+import PopupDispMsg from './Popup-DispMsg'
 import {
   TextField,
   Button,
@@ -19,6 +20,7 @@ import {
 
 const Booking = () => {
   
+  const [loader,setLoader] = useState(false);
   //useState----------------------------------------------------
   const[dispMsg,setDispMsg] = useState("");
   const[bookedSlot,setBookedSlot] = useState([]);
@@ -97,19 +99,19 @@ const Booking = () => {
     });
   };
 
-  const handleDateChange = (newDate) => {
+  const handleDateChange = async (newDate) => {
     setFormData((prevData) => ({
       ...prevData,
       date: newDate, // Update the date field in the form data
     }));
-    
-   
-      // Call GetAvailableSlot after updating the date
-      GetAvailableSlot(newDate);
-
-  
-    // updateAvailableSlot();
-  };
+    console.log(newDate);
+    // Call GetAvailableSlot after updating the date
+      setLoader(true); 
+      // Show loader while fetching data
+      await GetAvailableSlot(newDate);
+      setLoader(false); 
+      // Hide loader after fetching data
+   };
 
   const filterDate = (date) =>{
     // let date = formData.date;
@@ -199,7 +201,7 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
   console.log("Selected Slot:", slot); // For debugging
   };
  
-  const GetAvailableSlot = async () => {
+  const GetAvailableSlot = async (newDate) => {
     try{ 
     
     //  const response = await fetch('http://localhost:5000/deleteEnteries',{
@@ -208,7 +210,9 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
        headers: {
          "Content-Type": "application/json",
        },
-       body: JSON.stringify({date: new Date(formData.date)}),
+       body: JSON.stringify({
+        date: newDate
+      }),
      });
      if (!response.ok) {
        throw new Error("Network response was not ok");
@@ -225,52 +229,16 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
     } 
    catch (error) {
      console.error("There has been a problem with your fetch operation:", error);
-     // Handle error (e.g., display an error message)
+    }
    }
-   }
-  
- 
+   const { name, address, email, phone, serviceType, date, slot, caseBrief,pincode } = formData;
 
 
 
 
-  const { name, address, email, phone, serviceType, date, slot, caseBrief,pincode } = formData;
-   
-
-
-
-  
-  
- 
-
-  //===================================================
-  
-  
-  
-//  const updateAvailableSlot = ()=>{
-//   const updatedSlots = slotDetails.map((slot) => {
-//     // const firstCharacter = parseInt(slot.value[0], 10); // Get the first character as a number
-//     const firstCharacter = slot.value[0]; // Get the first character as a number
-//     return {
-//       ...slot,
-//       disabled: bookedSlot.includes(firstCharacter),
-//     };
-//   });
-//   setslotDetails(updatedSlots);
-//  }
-
-
- 
-  
-
-
-
-   
-  
-  return (
+   return (
     <>
     <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
-       
       <Typography variant="h4" align="center" gutterBottom>
         Get an Appointment
       </Typography>
@@ -409,18 +377,16 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
           rows={4}
           fullWidth
         />
-          <Typography variant="h4" align="center" style={{backgroundColor:'red'}}gutterBottom>
-     {dispMsg}
-      </Typography>
-          
+       
+      
+           
      
         <Button type="submit" variant="contained" color="primary" fullWidth>
           Get an Appointment
         </Button>
-        <Button variant="outlined" color="secondary" fullWidth>
-          Check Appointment Details
-        </Button>
-      </Box>
+           
+          <PopupDispMsg msg={dispMsg}/>
+       </Box>
     </Container>
     </>
   );

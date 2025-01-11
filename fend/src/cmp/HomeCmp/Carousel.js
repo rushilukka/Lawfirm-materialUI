@@ -40,7 +40,7 @@ export default function CarouselReady() {
                   <div className="p-3" style={{ maxWidth: "900px" }}>
                     <h4 className="text-white text-uppercase mb-4" style={{ letterSpacing: "3px" }}>Results You Deserve</h4>
                     <h3 className="display-2 text-capitalize text-white mb-4">We prepared to oppose for you</h3>
-                    <Link className="btn  py-3 px-5 mt-2" to="/contact" style={{backgroundColor:'gold'}}>Get An Appointment</Link>                  </div>
+                    <Link className="btn  py-3 px-5 mt-2" to="/book-slot" style={{backgroundColor:'gold'}}>Get An Appointment</Link>                  </div>
                 </div>
               </Carousel.Caption>
             </div>
