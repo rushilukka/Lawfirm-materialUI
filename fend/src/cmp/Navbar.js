@@ -15,7 +15,31 @@ import BalanceIcon from '@mui/icons-material/Balance';
 
 const Navbar = () => {
   const theme = useTheme();
-
+  const GetAvailableSlot = async (newDate) => {
+    try{ 
+    
+     const response = await fetch('http://localhost:5000/getAvailableSlot-Me-2',{
+       method:'POST',
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify({
+        date: new Date()
+      }),
+     });
+     if (!response.ok) {
+       throw new Error("Network response was not ok");
+     }
+ 
+     
+     
+    
+    } 
+   catch (error) {
+     console.error("There has been a problem with your fetch operation:", error);
+    }
+   }
+   
   return (
     <>
     <AppBar position="sticky" color="primary" elevation={4}>
@@ -123,22 +147,24 @@ const Navbar = () => {
               Services
             </Button>
             <Button
-            variant="outlined"
-              color="inherit"
-              component={Link}
-              to="/book-slot"
-              sx={{
-                textTransform: 'capitalize',
-                fontWeight: 1000,
-                '&:hover': {
-                  color: theme.palette.accent.main,
-                  transform: 'scale(1.1)',
-                },
-                transition: 'all 0.3s ease-in-out',
-              }}
-            >
-              Book a Slot
-            </Button>
+  variant="outlined"
+  color="inherit"
+  component={Link}
+  to="/book-slot"
+  onClick={GetAvailableSlot} // Attach the event handler here
+  sx={{
+    textTransform: 'capitalize',
+    fontWeight: 1000,
+    '&:hover': {
+      color: theme.palette.accent.main,
+      transform: 'scale(1.1)',
+    },
+    transition: 'all 0.3s ease-in-out',
+  }}
+>
+  Book a Slot
+</Button>
+
           </Box>
 
           {/* Disclaimer and Login/Signup Buttons */}

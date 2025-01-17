@@ -1,7 +1,8 @@
 const e = require('express');
 const r = e.Router();
 const userBookingSchema = require('../db-schema/userBookingSchema'); 
- 
+const nodemailer = require('nodemailer');
+
 r.get('/', (req, res) => {
   res.send('Hello, World!');
 });
@@ -121,28 +122,78 @@ r.post('/getAvailableSlot', async (req, res) => {
   }
 });
 
+
+// Route to handle booking creation
 r.post('/booking', async (req, res) => {
-   const bookingData = req.body;
+  const bookingData = req.body;
 
   // Create an instance of the model
-  const newBooking =
-  {
+  const newBooking = {
     name: bookingData.name,
     email: bookingData.email,
     phone: bookingData.phone,
-     serviceType : bookingData.serviceType.toLowerCase(),
+    serviceType: bookingData.serviceType.toLowerCase(),
     date: new Date(bookingData.date),
     slot: bookingData.slot.charAt(0),
     address: bookingData.address,
     pincode: bookingData.pincode,
     caseBrief: bookingData.caseBrief,
-   
-}
+  };
 
-await userBookingSchema.collection.insertOne(newBooking);
-  
-  res.status(201).json({ message: "Booking created successfully!" });
-  
+  try {
+    // Insert booking into the database
+    await userBookingSchema.collection.insertOne(newBooking);
 
-});   
+    // Configure Nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail', // Or use another email service
+      auth: {
+        user: 'Rushi.lukka.315', // Replace with your email
+        pass: 'gofmpfbvzldxhosc', // Replace with your email password or app password
+      },
+    });
+
+    // Email content
+    const mailOptions = {
+      from: 'rushi.lukka.315@gmail.com', // Sender address
+      to: bookingData.email, // Receiver email
+      subject: 'Booking Confirmation - Vidhigna Law Firm',
+      html: `
+        <p>Dear ${bookingData.name},</p>
+        
+        <p>Thank you for choosing <strong>Vidhigna Law Firm</strong> for your legal services.</p>
+        
+        <p>We are pleased to confirm your booking. Below are the details of your appointment:</p>
+        <ul>
+          <li><strong>Service Type:</strong> ${newBooking.serviceType}</li>
+          <li><strong>Date:</strong> ${newBooking.date.toDateString()}</li>
+          <li><strong>Slot:</strong> ${newBooking.slot}</li>
+          <li><strong>Address:</strong> ${newBooking.address}</li>
+          <li><strong>Pincode:</strong> ${newBooking.pincode}</li>
+        </ul>
+        
+        <p>If you have any further questions or need assistance, feel free to contact us:</p>
+        <ul>
+          <li>Phone: <a href="tel:+9428669848">9428669848</a></li>
+          <li>Email: <a href="mailto:rushi.lukka.315@gmail.com">rushi.lukka.315@gmail.com</a></li>
+        </ul>
+        
+        <p>We look forward to assisting you with your legal needs.</p>
+        
+        <p>Best regards,<br>
+        <strong>Vidhigna Law Firm</strong></p>
+      `,
+    };
+    
+    // Send the email
+    await transporter.sendMail(mailOptions);
+
+    // Respond to the client
+    res.status(201).json({ message: 'Booking created successfully and confirmation email sent!' });
+  } catch (error) {
+    console.error('Error while creating booking or sending email:', error);
+    res.status(500).json({ message: 'Failed to create booking or send confirmation email.' });
+  }
+});
+
 module.exports = r;

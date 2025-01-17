@@ -22,7 +22,7 @@ const Booking = () => {
   
   const [loader,setLoader] = useState(false);
   //useState----------------------------------------------------
-  const[dispMsg,setDispMsg] = useState("");
+  const[dispMsg,setDispMsg] = useState("No Notification");
   const[bookedSlot,setBookedSlot] = useState([]);
   const [slotDetails,setslotDetails] = useState([
     { value: "6:00-6:45", disabled: false },
@@ -35,6 +35,7 @@ const Booking = () => {
     email: '',
     phone: '',
     date: null,
+    // date: new Date(Date.now() + 60 * 60 * 60 * 1000),
     slot: '',
     address: '',
     pincode: '',
@@ -106,11 +107,9 @@ const Booking = () => {
     }));
     console.log(newDate);
     // Call GetAvailableSlot after updating the date
-      setLoader(true); 
-      // Show loader while fetching data
+        // Show loader while fetching data
       await GetAvailableSlot(newDate);
-      setLoader(false); 
-      // Hide loader after fetching data
+       // Hide loader after fetching data
    };
 
   const filterDate = (date) =>{
@@ -231,6 +230,7 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
      console.error("There has been a problem with your fetch operation:", error);
     }
    }
+   
    const { name, address, email, phone, serviceType, date, slot, caseBrief,pincode } = formData;
 
 

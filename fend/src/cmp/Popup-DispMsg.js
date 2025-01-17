@@ -7,22 +7,17 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  List,
-  ListItem,
-  ListItemText,
 } from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
-function DispMsgPopup({msg}) {
-    useEffect(()=>{
-        setIsOpen(true); 
-    },[msg])
+function DispMsgPopup({ msg }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openPopup = () => {
-    setIsOpen(true); 
-  };
+  useEffect(() => {
+    // (msg == "No Notification")?setIsOpen(false):setIsOpen(true);
+    setIsOpen(msg !== "No Notification");
+  }, [msg]);
 
   const closePopup = () => {
     setIsOpen(false);
@@ -30,79 +25,106 @@ function DispMsgPopup({msg}) {
 
   const buttonRef = useRef(null);
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      buttonRef.current.click();
-    }
-  };
-
- 
   return (
     <Box>
-    {/* Button to display */}
-    <Button variant="outlined" color="secondary" onClick={openPopup}
-           sx={{
-           mb: 2,
-           position:'fixed',
-           top:'200px',
-           right:'30px',
-          backgroundColor: "#FFD700", // Gold color for the button
-          fontSize: "1.2rem", // Increase font size of the button
+      {/* Notification Button */}
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={() => setIsOpen(true)}
+        sx={{
+          mb: 2,
+          position: "fixed",
+          top: "200px",
+          right: "30px",
+          backgroundColor: "#FFC107", // Vibrant yellow
+          color: "black",
+          fontSize: "1.2rem",
+          border: "none",
+          '&:hover': {
+            backgroundColor: "#FFB300", // Slightly darker yellow on hover
+          },
         }}
       >
-        {(msg=="")?<NotificationsNoneIcon/>
-       : <NotificationsIcon/>}
+        {msg === "No Notification" ? <NotificationsNoneIcon /> : <NotificationsIcon />}
         Notification
       </Button>
-        
-    {/* Disclaimer Popup */}
+
+      {/* Notification Dialog */}
       <Dialog
         open={isOpen}
         onClose={closePopup}
+        sx={{
+            borderRadius:'12px',
+        }}
         maxWidth="sm"
         fullWidth
-        aria-labelledby="disclaimer-title"
-       >
+        aria-labelledby="notification-dialog-title"
+      >
+        {/* Dialog Header */}
         <DialogTitle
-          id="disclaimer-title"
+          id="notification-dialog-title"
           sx={{
-            backgroundColor: "#FFD700", // Gold color for the header
-            color: "white",
-            fontSize: "1.5rem", // Larger title size
-            fontWeight: "bold", // Bold title
+
+              backgroundColor: "#FFC107", // Gold
+            color: "#000", // Black text
+            fontSize: "1.6rem",
+            fontWeight: "bold",
+            textAlign: "center",
+            padding: "16px 24px",
+            
           }}
         >
-   Notification        
-   </DialogTitle>
+          📢 Notification
+        </DialogTitle>
+
+        {/* Dialog Content */}
         <DialogContent
           sx={{
-            backgroundColor: "#333", // Dark background for content area
-            color: "white",
-            fontSize: "1.1rem", // Larger text size for content
+            // backgroundColor: "#F9F9F9", // Light background for content
+            color: "#333", // Dark text color
+            fontSize: "1.2rem",
+            textAlign: "center",
+            padding: "24px",
           }}
         >
-          <Typography variant="body1" paragraph>
-           {msg}
+          <Typography
+            variant="body1"
+            paragraph
+            sx={{
+              marginBottom: "16px",
+              lineHeight: "1.6",
+              fontWeight: "500",
+            }}
+          >
+            {msg}
           </Typography>
-          </DialogContent>
+        </DialogContent>
+
+        {/* Dialog Actions */}
         <DialogActions
           sx={{
-            backgroundColor: "#FFD700", // Gold background for actions section
+            // backgroundColor: "#FFC107",
             justifyContent: "center",
+            padding: "16px 24px",
           }}
         >
           <Button
             variant="contained"
-            color="secondary"
-            ref={buttonRef}
             onClick={closePopup}
             sx={{
-              backgroundColor: "#FFD700", // Gold color for the button
-              color: "black", // Black text color
-              fontSize: "1.1rem", // Larger button font size
+              backgroundColor: "#FFB300", // Vibrant yellow
+              color: "#000", // Black text
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              padding: "8px 24px",
+              '&:hover': {
+                backgroundColor: "#FFA000", // Slightly darker shade
+              },
             }}
           >
-            Accept
+            Close
           </Button>
         </DialogActions>
       </Dialog>
