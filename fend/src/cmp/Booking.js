@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './Booking.css'
 import BookingSlot from './Booking-Slot'
 import PopupDispMsg from './Popup-DispMsg'
+import Loader from './Popup-Loader';
 import {
   TextField,
   Button,
@@ -20,7 +21,7 @@ import {
 
 const Booking = () => {
   
-  const [loader,setLoader] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   //useState----------------------------------------------------
   const[dispMsg,setDispMsg] = useState("No Notification");
   const[bookedSlot,setBookedSlot] = useState([]);
@@ -154,6 +155,7 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
       setDispMsg("Please select a slot.");
       return;
     }
+    setIsLoading(true);
   
     // Proceed with the rest of the submission logic
     formData.date = filterDate(formData.date);
@@ -165,7 +167,8 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
         },
         body: JSON.stringify(formData),
       });
-  
+      
+     
       if (!response.ok) {
         throw new Error("Network response was not ok");
       } else {
@@ -183,7 +186,11 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
         });
         setDispMsg("");
       }
-  
+
+
+      setIsLoading(false);
+
+      
       const res = await response.json();
       if (response.ok){
          setDispMsg("Booking Done!");
@@ -240,7 +247,9 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
 
 
    return (
-    <>
+    <> 
+    {isLoading && <Loader message="Processing your request..." />}
+    
     <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
       <Typography variant="h4" align="center" gutterBottom>
         Get an Appointment
