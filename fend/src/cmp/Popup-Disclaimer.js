@@ -57,10 +57,11 @@ function Disclaimer() {
       {/* Disclaimer Button */}
       <Button
         variant="contained"
-        color="warning"
+        color="black"
         onClick={openPopup}
         sx={{
           display: { xs: "none", lg: "block" },
+          color:'black',
           mb: 2,
           backgroundColor: "#FFD700", // Gold color for the button
           fontSize: "1.2rem", // Increase font size of the button
@@ -82,7 +83,7 @@ function Disclaimer() {
           id="disclaimer-title"
           sx={{
             backgroundColor: "#FFD700", // Gold color for the header
-            color: "white",
+            color: "black",
             fontSize: "1.5rem", // Larger title size
             fontWeight: "bold", // Bold title
           }}

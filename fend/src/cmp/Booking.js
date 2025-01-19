@@ -185,7 +185,10 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
       }
   
       const res = await response.json();
-      if (response.ok) setDispMsg("Booking Done!");
+      if (response.ok){
+         setDispMsg("Booking Done!");
+        
+        }
     } catch (error) {
       console.error("There has been a problem with your fetch operation:", error);
     }

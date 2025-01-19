@@ -1,0 +1,15 @@
+TO add
+
+if resp.ok => 
+2 options,
+pay offline,
+show QR and write "____pay - 900" get notify once payment is verified
+can check -  by Admin - send mail verified
+else OFFLINE - 1000 
+can also pay before date of meet
+
+NEW - a page for (disp - bookings) after authentication 
+
+Admin- 
+check if pay later - 
+while meet, must pay first

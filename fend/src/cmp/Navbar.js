@@ -172,7 +172,7 @@ const Navbar = () => {
  
 
              <Button
-              color="inherit"
+              color="black"
               variant="contained"
               component={Disclaimer}
               
@@ -188,6 +188,7 @@ const Navbar = () => {
               sx={{
                 textTransform: 'capitalize',
                 fontWeight: 1000,
+                color:'black',  
                 '&:hover': {
                   color: 'black',
                   transform: 'scale(1.1)',
