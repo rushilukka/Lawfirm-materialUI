@@ -147,23 +147,41 @@ const Navbar = () => {
               Services
             </Button>
             <Button
-  variant="outlined"
-  color="inherit"
-  component={Link}
-  to="/book-slot"
-  onClick={GetAvailableSlot} // Attach the event handler here
-  sx={{
-    textTransform: 'capitalize',
-    fontWeight: 1000,
-    '&:hover': {
-      color: theme.palette.accent.main,
-      transform: 'scale(1.1)',
-    },
-    transition: 'all 0.3s ease-in-out',
-  }}
->
-  Book a Slot
-</Button>
+                variant="outlined"
+                color="inherit"
+                component={Link}
+                to="/booking-details"
+                // onClick={GetAvailableSlot} // Attach the event handler here
+                sx={{
+                  textTransform: 'capitalize',
+                  fontWeight: 1000,
+                  '&:hover': {
+                    color: theme.palette.accent.main,
+                    transform: 'scale(1.1)',
+                  },
+                  transition: 'all 0.3s ease-in-out',
+                }}
+              >
+            Bookings
+          </Button>
+            <Button
+                variant="outlined"
+                color="inherit"
+                component={Link}
+                to="/book-slot"
+                // onClick={GetAvailableSlot} // Attach the event handler here
+                sx={{
+                  textTransform: 'capitalize',
+                  fontWeight: 1000,
+                  '&:hover': {
+                    color: theme.palette.accent.main,
+                    transform: 'scale(1.1)',
+                  },
+                  transition: 'all 0.3s ease-in-out',
+                }}
+              >
+            Book a Slot
+          </Button>
 
           </Box>
 

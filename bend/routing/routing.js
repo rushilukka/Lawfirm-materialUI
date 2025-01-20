@@ -36,26 +36,28 @@ r.post('/getAvailableSlot-Me-2', async (req, res) => {
 
 
 
-r.post('/getAvailableSlot-Me',async (req, res) =>{
-   try{
+// r.post('/getAvailableSlot-Me',async (req, res) =>{
+//    try{
 
-    const {date} = req.body;
-    console.log(date);
-    const parserDate = new Date(date);
-    console.log(parserDate);
-    // await userBookingSchema.collection.find(newBooking);
-    const slots = await userBookingSchema.collection.find({ date: parserDate }).toArray();
-    console.log(slots);
-    res.json(slots);
-    // how in this i can connect to different db other than default test db
-   }
-   catch{
+//     const {date} = req.body;
+//     console.log(date);
+//     const parserDate = new Date(date);
+//     console.log(parserDate);
+//     // await userBookingSchema.collection.find(newBooking);
+//     const slots = await userBookingSchema.collection.find({ date: parserDate }).toArray();
+//     console.log(slots);
+//     res.json(slots);
+//     // how in this i can connect to different db other than default test db
+//    }
+//    catch{
 
-   }
-});
+//    }
+// });
+
 r.post('/deleteEnteries', async (req, res) => {
  await userBookingSchema.deleteMany({});
 })
+
 // r.post('/getAvailableSlot-getsAllObj', async (req, res) => {
 //   try {
 //       const { date } = req.body;
@@ -87,43 +89,133 @@ r.post('/deleteEnteries', async (req, res) => {
 //   }
 // });
 
+r.post('/deleteEnteries1', async (req, res) => {
+  await userBookingSchema.deleteMany({});
+ })
+ 
+// r.post('/getAvailableSlot', async (req, res) => {
+//   try {
+//       const { date } = req.body;
+//       console.log("Received date:", date);
 
-r.post('/getAvailableSlot', async (req, res) => {
-  try {
-      const { date } = req.body;
-      console.log("Received date:", date);
+//       const parserDate = new Date(date); // Parse the input date
+//       if (isNaN(parserDate)) {
+//           return res.status(400).json({ error: 'Invalid date format' });
+//       }
+//       console.log("Parsed date:", parserDate);
 
-      const parserDate = new Date(date); // Parse the input date
-      if (isNaN(parserDate)) {
-          return res.status(400).json({ error: 'Invalid date format' });
+//       // Define the start and end of the day
+//       const startOfDay = new Date(parserDate);
+//       startOfDay.setUTCHours(0, 0, 0, 0);
+
+//       const endOfDay = new Date(parserDate);
+//       endOfDay.setUTCHours(23, 59, 59, 999);
+
+//       // Query the database to find slots within the specified day
+//       const bookings = await userBookingSchema.collection
+//           .find({ date: { $gte: startOfDay, $lt: endOfDay } }, { projection: { slot: 1, _id: 0 } })
+//           .toArray();
+
+//       // Extract the slot values into an array
+//       const slots = bookings.map(booking => booking.slot);
+
+//       console.log("Booked slots:", slots);
+//       res.json(slots);
+//   } catch (error) {
+//       console.error("Error fetching available slots:", error);
+//       res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+
+// Route to handle booking creation
+
+
+// Fetch booking records
+
+
+r.post('/fetch-records', async (req, res) => {
+  const { query, filter } = req.body;
+
+  // Validate request
+  if (!query || !filter) {
+    return res.status(400).json({ message: 'Query and filter are required.' });
+  }
+
+  // Build filter condition
+  let filterCondition = {};
+
+  switch (filter.toLowerCase()) {
+    case 'name':
+      filterCondition = { name: { $regex: query, $options: 'i' } }; // Case-insensitive match
+      break;
+    case 'email':
+      filterCondition = { email: query };
+      break;
+    case 'phone':
+      filterCondition = { phone: query };
+      break;
+    case 'servicetype':
+      filterCondition = { serviceType: query.toLowerCase() };
+      break;
+    case 'date':
+      try {
+        filterCondition = { date: new Date(query) };
+      } catch {
+        return res.status(400).json({ message: 'Invalid date format.' });
       }
-      console.log("Parsed date:", parserDate);
+      break;
+    case 'pincode':
+      filterCondition = { pincode: query };
+      break;
+    default:
+      return res.status(400).json({ message: 'Invalid filter provided.' });
+  }
 
-      // Define the start and end of the day
-      const startOfDay = new Date(parserDate);
-      startOfDay.setUTCHours(0, 0, 0, 0);
+  // Slot time mapping
+  const slotMapping = {
+    6: '6:00 to 6:45',
+    7: '7:00 to 7:45',
+    8: '8:00 to 8:45',
+    9: '9:00 to 9:45',
+  };
 
-      const endOfDay = new Date(parserDate);
-      endOfDay.setUTCHours(23, 59, 59, 999);
+  try {
+    // Fetch records from the database and sort by date in descending order
+    const bookings = await userBookingSchema.find(filterCondition).sort({ date: -1 }); // -1 for descending order
 
-      // Query the database to find slots within the specified day
-      const bookings = await userBookingSchema.collection
-          .find({ date: { $gte: startOfDay, $lt: endOfDay } }, { projection: { slot: 1, _id: 0 } })
-          .toArray();
+    // Map the bookings and update the slot value with the corresponding time range
+    const updatedBookings = bookings.map((booking) => {
+      return {
+        ...booking.toObject(), // Convert mongoose document to plain object
+        slot: slotMapping[booking.slot] || booking.slot, // Map slot to time range
+      };
+    });
 
-      // Extract the slot values into an array
-      const slots = bookings.map(booking => booking.slot);
-
-      console.log("Booked slots:", slots);
-      res.json(slots);
+    // Respond to the client
+    if (updatedBookings.length > 0) {
+      res.status(200).json(updatedBookings);
+    } else {
+      res.status(404).json({ message: 'No bookings found for the given filter and query.' });
+    }
   } catch (error) {
-      console.error("Error fetching available slots:", error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error fetching bookings:', error);
+    res.status(500).json({ message: 'Failed to fetch bookings.' });
   }
 });
 
 
-// Route to handle booking creation
+
+
+
+
+
+
+
+
+
+
+
 r.post('/booking', async (req, res) => {
   const bookingData = req.body;
 

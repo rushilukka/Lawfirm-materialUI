@@ -9,19 +9,19 @@ import BookSlot from './cmp/Booking';
 import Navbar from './cmp/Navbar';
 import theme from './Theme/theme'; // Import your custom theme
 import Footer from './cmp/Footer';
+import BookingDetails from './cmp/BookingDetails/Booking-Details';
 function App() {
   return (
     <ThemeProvider theme={theme}> {/* Apply the theme globally */}
       
       <Router>
-         
         <Navbar /> {/* Add Navbar for navigation */}
-
          <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/services" element={<Services />} />
           <Route path="/book-slot" element={<BookSlot />} />
+          <Route path="/booking-details" element={<BookingDetails/>} />
         </Routes>
 
         <Footer/>
