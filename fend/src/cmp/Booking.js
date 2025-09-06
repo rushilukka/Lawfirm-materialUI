@@ -1,12 +1,9 @@
-// src/cmp/Booking.js
-import React, { useState,useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import './Booking.css'
-import BookingSlot from './Booking-Slot'
-import PopupDispMsg from './Popup-DispMsg'
-import Loader from './Popup-Loader';
+import './Booking.css';
+import BookingSlot from './Booking-Slot';
+import PopupDispMsg from './Popup-DispMsg';
 import {
   TextField,
   Button,
@@ -17,31 +14,51 @@ import {
   Typography,
   Container,
   Box,
+  Paper,
+  useTheme,
+  useMediaQuery,
+  Alert,
+  Snackbar,
+  Grid,
+  CircularProgress
 } from '@mui/material';
 
 const Booking = () => {
+  const theme = useTheme();
   
   const [isLoading, setIsLoading] = useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  
   //useState----------------------------------------------------
-  const[dispMsg,setDispMsg] = useState("No Notification");
-  const[bookedSlot,setBookedSlot] = useState([]);
-  const [slotDetails,setslotDetails] = useState([
+  const [dispMsg, setDispMsg] = useState("No Notification");
+  const [bookedSlot, setBookedSlot] = useState([]);
+  const [slotDetails, setslotDetails] = useState([
     { value: "6:00-6:45", disabled: false },
     { value: "7:00-7:45", disabled: false },
     { value: "8:00-8:45", disabled: false },
     { value: "9:00-9:45", disabled: false },
-  ])
+  ]);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     date: null,
-    // date: new Date(Date.now() + 60 * 60 * 60 * 1000),
     slot: '',
     address: '',
     pincode: '',
     serviceType: '',
     caseBrief: '',
+  });
+
+  // Form validation states
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    pincode: ''
   });
 
   
@@ -57,7 +74,7 @@ const Booking = () => {
       };
     });
     setslotDetails(updatedSlots);
-    }, [bookedSlot]); // Run when bookedSlot changes
+    }, [bookedSlot, formData.date]); // Run when bookedSlot changes
   
   
    
@@ -78,38 +95,65 @@ const Booking = () => {
     return tempDate;
   };
 
-  const handleChange = (event) => {
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'email':
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) 
+          ? '' 
+          : 'Please enter a valid email address';
+      case 'phone':
+        return /^\d{10}$/.test(value) 
+          ? '' 
+          : 'Phone number must be exactly 10 digits';
+      case 'pincode':
+        return /^\d{6}$/.test(value) 
+          ? '' 
+          : 'Pincode must be exactly 6 digits';
+      case 'name':
+        return value.length >= 2 
+          ? '' 
+          : 'Name must be at least 2 characters long';
+      default:
+        return '';
+    }
+  };
 
-       const { name, value } = event.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
     
-      // Validate phone number
-      if (name === 'phone') {
-        if (!/^\d{0,10}$/.test(value)) {
-          return; // Prevent invalid input (more than 10 digits or non-numeric characters)
-        }
-    
-    
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    };
-    
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
+    // Special handling for phone number input
+    if (name === 'phone' && !/^\d{0,10}$/.test(value)) {
+      return; // Prevent invalid input
+    }
+
+    // Special handling for pincode input
+    if (name === 'pincode' && !/^\d{0,6}$/.test(value)) {
+      return; // Prevent invalid input
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    // Validate field if it's one of the required fields
+    if (['name', 'email', 'phone', 'pincode'].includes(name)) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: validateField(name, value)
+      }));
+    }
   };
 
   const handleDateChange = async (newDate) => {
-    setFormData((prevData) => ({
+    await GetAvailableSlot(newDate);
+    setFormData((prevData) => ({  
       ...prevData,
       date: newDate, // Update the date field in the form data
     }));
-    console.log(newDate);
+    console.log("newDate:--------------------", newDate);
     // Call GetAvailableSlot after updating the date
         // Show loader while fetching data
-      await GetAvailableSlot(newDate);
        // Hide loader after fetching data
    };
 
@@ -144,60 +188,95 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    // Check if the phone number is valid
-    if (!/^\d{10}$/.test(formData.phone)) {
-      setDispMsg("Phone number must be exactly 10 digits.");
+
+    // Validate all fields
+    const validationErrors = {
+      name: validateField('name', formData.name),
+      email: validateField('email', formData.email),
+      phone: validateField('phone', formData.phone),
+      pincode: validateField('pincode', formData.pincode)
+    };
+
+    // Check if there are any validation errors
+    const hasErrors = Object.values(validationErrors).some(error => error !== '');
+    if (hasErrors) {
+      setErrors(validationErrors);
+      setSnackbarMessage('Please fix the errors in the form');
+      setSnackbarSeverity('error');
+      setShowSnackbar(true);
       return;
     }
-  
-    if (formData.slot === "") {
-      setDispMsg("Please select a slot.");
+
+    // Check if date and slot are selected
+    if (!formData.date) {
+      setSnackbarMessage('Please select an appointment date');
+      setSnackbarSeverity('error');
+      setShowSnackbar(true);
       return;
     }
+
+    if (!formData.slot) {
+      setSnackbarMessage('Please select a time slot');
+      setSnackbarSeverity('error');
+      setShowSnackbar(true);
+      return;
+    }
+
+    if (!formData.serviceType) {
+      setSnackbarMessage('Please select a service type');
+      setSnackbarSeverity('error');
+      setShowSnackbar(true);
+      return;
+    }
+
     setIsLoading(true);
-  
-    // Proceed with the rest of the submission logic
-    formData.date = filterDate(formData.date);
+
     try {
+      // Format date for submission
+      const formattedData = {
+        ...formData,
+        date: filterDate(formData.date)
+      };
+
       const response = await fetch("http://localhost:5000/booking", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formattedData),
       });
-      
-     
+
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error("Network response was not ok");
-      } else {
-        // Reset form data after successful submission
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          date: null,
-          slot: '',
-          address: '',
-          pincode: '',
-          serviceType: '',
-          caseBrief: '',
-        });
-        setDispMsg("");
+        throw new Error(responseData.message || "Booking failed");
       }
 
+      // Reset form on success
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        date: null,
+        slot: '',
+        address: '',
+        pincode: '',
+        serviceType: '',
+        caseBrief: '',
+      });
 
-      setIsLoading(false);
+      setSnackbarMessage('Appointment booked successfully!');
+      setSnackbarSeverity('success');
+      setShowSnackbar(true);
+      setDispMsg("Booking Done!");
 
-      
-      const res = await response.json();
-      if (response.ok){
-         setDispMsg("Booking Done!");
-        
-        }
     } catch (error) {
-      console.error("There has been a problem with your fetch operation:", error);
+      console.error("Booking error:", error);
+      setSnackbarMessage(error.message || 'Failed to book appointment. Please try again.');
+      setSnackbarSeverity('error');
+      setShowSnackbar(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   
@@ -230,9 +309,9 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
      const data = await response.json();
      
      
-     const day = String(formData.date.getDate()).padStart(2, "0");
-     const month = String(formData.date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
-     const year = formData.date.getFullYear();
+     const day = String(formData?.date?.getDate()).padStart(2, "0");
+     const month = String(formData?.date?.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+     const year = formData?.date?.getFullYear();
        if(data.length >3 ) setDispMsg(`No slot available on ${day}/${month}/${year}`) 
      setBookedSlot(data);
     } 
@@ -246,160 +325,239 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
 
 
 
-   return (
-    <> 
-    {isLoading && <Loader message="Processing your request..." />}
-    
-    <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        Get an Appointment
-      </Typography>
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-      >
-        <TextField
-          label="Name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          fullWidth
-          />
-        <TextField
-          label="Email *"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          type="email"
-          fullWidth
-          />
-        <TextField
-          label="Phone Number"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          type="tel"
-          required
-          fullWidth
-          />
-  <div
-   style={{
-     display: 'flex',
-     flexDirection: 'row',
-     justifyContent: 'center',
-     alignItems: 'center',
-     zIndex: '11',
-     width: '534px', // Adjust width for a better UI
-     padding: '1rem',
-     margin: '1rem auto',
-     backgroundColor: '#ffffff', // Light background
-     borderRadius: '2px', // Rounded corners
-    }}
->
-   
-      <FormControl  required  style={{
-            width:'60%',
-            paddingRight:'10%',
+  return (
+    <>
+      {isLoading && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
             alignItems: 'center',
-          }} >
-        <label style={{ marginTop: '0rem',color: '#333'}}>
-            
-          Select Appointment Date
-        </label>
-
-        <DatePicker
-          placeholderText="Select Date"
-          className="custom-datepicker-container"
-          inputClassName="custom-datepicker-input"
-          minDate={new Date(Date.now() + 24 * 60 * 60 * 1000)}
-          maxDate={calculateMaxDate()}
-          dateFormat="dd/MM/yyyy"
-          selected={formData.date}
-          onChange={handleDateChange}
-          required
-          filterDate={(date) => {
-            const day = date.getDay();
-            return day !== 0 && day !== 6; // Allow only weekdays
-            
+            justifyContent: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 9999,
           }}
-        />
-        <Button   onClick={GetAvailableSlot} variant="contained" color="primary">
-          Check available slot
-        </Button>
-      </FormControl>
-        {/* <div>{formData.date.toLocaleDateString()}</div> */}
-       
-{/* ----------------------------------------------------*/}
-        {/* {formData.date && <div>{formData.date.toLocaleDateString()}</div>}  */}
-{/* ----------------------------------------------------*/}
-      <FormControl
-      required
-      style={{
-        width: "40%",
-        paddingLeft: "10%",
-      }}
-    >
-      <BookingSlot onSlotChange={handleSlotChange} slotDetails={slotDetails} required/>
-      {/* <p>Selected Slot in Parent: {formData.slot}</p> */}
-    </FormControl>
-</div>
-        
-{/* ----------------------------------------------------*/}
-       
-       
-        <TextField
-          label="Address"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          label="pincode"
-          name="pincode"
-          value={formData.pincode}
-          onChange={handleChange}
-          fullWidth
-        />
-
-        <FormControl fullWidth required>
-          <InputLabel id="service-type-label">Type of Service</InputLabel>
-          <Select
-            labelId="service-type-label"
-            name="serviceType"
-            value={formData.serviceType}
-            onChange={handleChange}
+        >
+          <Paper
+            elevation={3}
+            sx={{
+              p: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+            }}
           >
-            <MenuItem value="Civil">Civil</MenuItem>
-            <MenuItem value="Criminal">Criminal</MenuItem>
-            <MenuItem value="Family">Family</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField
-          label="Brief About Case (Optional)"
-          name="caseBrief"
-          value={formData.caseBrief}
-          onChange={handleChange}
-          multiline
-          rows={4}
-          fullWidth
-        />
-       
-      
-           
-     
-        <Button type="submit" variant="contained" color="primary" fullWidth>
-          Get an Appointment
-        </Button>
-           
-          <PopupDispMsg msg={dispMsg}/>
-       </Box>
-    </Container>
+            <CircularProgress />
+            <Typography>Processing your request...</Typography>
+          </Paper>
+        </Box>
+      )}
+
+      <Container 
+        maxWidth="md" 
+        sx={{ 
+          mt: { xs: 4, sm: 6, md: 8 },
+          mb: { xs: 4, sm: 6, md: 8 }
+        }}
+      >
+        <Paper 
+          elevation={3} 
+          sx={{ 
+            p: { xs: 2, sm: 3, md: 4 },
+            borderRadius: 2
+          }}
+        >
+          <Typography 
+            variant="h4" 
+            align="center" 
+            gutterBottom
+            sx={{
+              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
+              mb: { xs: 3, sm: 4 }
+            }}
+          >
+            Get an Appointment
+          </Typography>
+
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: { xs: 2, sm: 3 } 
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                  error={!!errors.name}
+                  helperText={errors.name}
+                  sx={{ mb: { xs: 2, sm: 0 } }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  type="email"
+                  required
+                  fullWidth
+                  error={!!errors.email}
+                  helperText={errors.email}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Phone Number"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  type="tel"
+                  required
+                  fullWidth
+                  error={!!errors.phone}
+                  helperText={errors.phone}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Pincode"
+                  name="pincode"
+                  value={formData.pincode}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                  error={!!errors.pincode}
+                  helperText={errors.pincode}
+                />
+              </Grid>
+            </Grid>
+
+            <Paper 
+              elevation={1} 
+              sx={{ 
+                p: { xs: 2, sm: 3 },
+                mt: 2,
+                backgroundColor: 'background.default'
+              }}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h6" gutterBottom>
+                      Select Appointment Date
+                    </Typography>
+                    <DatePicker
+                      placeholderText="Select Date"
+                      className="custom-datepicker-container"
+                      wrapperClassName="datepicker-wrapper"
+                      minDate={new Date(Date.now() + 24 * 60 * 60 * 1000)}
+                      maxDate={calculateMaxDate()}
+                      dateFormat="dd/MM/yyyy"
+                      selected={formData.date}
+                      onChange={handleDateChange}
+                      required
+                      filterDate={(date) => {
+                        const day = date.getDay();
+                        return day !== 0 && day !== 6;
+                      }}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <BookingSlot 
+                    onSlotChange={handleSlotChange} 
+                    slotDetails={slotDetails} 
+                    required
+                  />
+                </Grid>
+              </Grid>
+            </Paper>
+
+            <TextField
+              label="Address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              multiline
+              rows={2}
+              fullWidth
+              sx={{ mt: 2 }}
+            />
+
+            <FormControl fullWidth required sx={{ mt: 2 }}>
+              <InputLabel id="service-type-label">Type of Service</InputLabel>
+              <Select
+                labelId="service-type-label"
+                name="serviceType"
+                value={formData.serviceType}
+                onChange={handleChange}
+              >
+                <MenuItem value="Civil">Civil</MenuItem>
+                <MenuItem value="Criminal">Criminal</MenuItem>
+                <MenuItem value="Family">Family</MenuItem>
+              </Select>
+            </FormControl>
+
+            <TextField
+              label="Brief About Case (Optional)"
+              name="caseBrief"
+              value={formData.caseBrief}
+              onChange={handleChange}
+              multiline
+              rows={4}
+              fullWidth
+              sx={{ mt: 2 }}
+            />
+
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary" 
+              fullWidth
+              size="large"
+              sx={{ 
+                mt: 3,
+                py: 1.5,
+                fontSize: '1.1rem'
+              }}
+            >
+              Book Appointment
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
+
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setShowSnackbar(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setShowSnackbar(false)} 
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
+      <PopupDispMsg msg={dispMsg}/>
     </>
   );
 };
