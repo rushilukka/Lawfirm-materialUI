@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Button,
@@ -13,6 +14,7 @@ import {
 } from "@mui/material";
 
 function Disclaimer() {
+  const theme = useTheme();
   const [isOpen, setIsOpen] = useState(true);
 
   const openPopup = () => {
@@ -57,14 +59,13 @@ function Disclaimer() {
       {/* Disclaimer Button */}
       <Button
         variant="contained"
-        color="black"
         onClick={openPopup}
         sx={{
           display: { xs: "none", lg: "block" },
-          color:'black',
+          color: theme.palette.custom.black.main,
           mb: 2,
-          backgroundColor: "#FFD700", // Gold color for the button
-          fontSize: "1.2rem", // Increase font size of the button
+          backgroundColor: theme.palette.accent.main,
+          fontSize: theme.typography.button.fontSize.md,
         }}
       >
         Disclaimer
@@ -82,19 +83,19 @@ function Disclaimer() {
         <DialogTitle
           id="disclaimer-title"
           sx={{
-            backgroundColor: "#FFD700", // Gold color for the header
-            color: "black",
-            fontSize: "1.5rem", // Larger title size
-            fontWeight: "bold", // Bold title
+            backgroundColor: theme.palette.accent.main,
+            color: theme.palette.custom.black.main,
+            fontSize: theme.typography.h2.fontSize.md,
+            fontWeight: theme.typography.h2.fontWeight,
           }}
         >
           Disclaimer
         </DialogTitle>
         <DialogContent
           sx={{
-            backgroundColor: "#333", // Dark background for content area
-            color: "white",
-            fontSize: "1.1rem", // Larger text size for content
+            backgroundColor: theme.palette.custom.black.main,
+            color: theme.palette.custom.white.main,
+            fontSize: theme.typography.body1.fontSize.md,
           }}
         >
           <Typography variant="body1" paragraph>
@@ -127,19 +128,18 @@ function Disclaimer() {
         </DialogContent>
         <DialogActions
           sx={{
-            backgroundColor: "#FFD700", // Gold background for actions section
+            backgroundColor: theme.palette.accent.main,
             justifyContent: "center",
           }}
         >
           <Button
             variant="contained"
-            color="secondary"
             ref={buttonRef}
             onClick={closePopup}
             sx={{
-              backgroundColor: "#FFD700", // Gold color for the button
-              color: "black", // Black text color
-              fontSize: "1.1rem", // Larger button font size
+              backgroundColor: theme.palette.accent.main,
+              color: theme.palette.custom.black.main,
+              fontSize: theme.typography.button.fontSize.md,
             }}
           >
             Accept

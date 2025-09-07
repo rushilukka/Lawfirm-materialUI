@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { TextField, Card, CardContent, Button, Container, Typography, Grid, RadioGroup, FormControlLabel, Radio, FormLabel } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { TextField, Card, CardContent, Button, Container, Typography, Grid, RadioGroup, FormControlLabel, Radio, FormLabel, Box, Alert } from '@mui/material';
 
 const BookingDetails = () => {
+  const theme = useTheme();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('');
   const [result, setResult] = useState(null);
@@ -45,13 +47,18 @@ const BookingDetails = () => {
   };
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
-      <Typography variant="h5" gutterBottom>
+    <Container maxWidth="sm" sx={{ mt: 8 }}>
+      <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
         Fetch Booking Records
       </Typography>
-      <Grid container spacing={2}>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      <Grid container spacing={3}>
         <Grid item xs={12}>
-          <FormLabel component="legend">Search By</FormLabel>
+          <FormLabel component="legend" sx={{ mb: 1 }}>Search By</FormLabel>
           <RadioGroup
             row
             value={filter}
@@ -87,12 +94,12 @@ const BookingDetails = () => {
         </Grid>
       </Grid>
       {result ? (
-        <div style={{ marginTop: '2rem' }}>
+        <Box sx={{ mt: 8 }}>
           <Typography variant="h6" gutterBottom>
             Results:
           </Typography>
-          {result.length > 0 ? (
-            result.map((item, index) => {
+          {result?.bookings?.length > 0 ? (
+            result.bookings.map((item, index) => {
               const bookingDate = new Date(item.date);
               const today = new Date();
 
@@ -102,33 +109,39 @@ const BookingDetails = () => {
               return (
                 <Card
                   key={index}
-                  style={{
-                    marginBottom: '1rem',
-                    backgroundColor: !isUpcoming ? 'green' : 'transparent', // Set green background if the date is passed
+                  sx={{
+                    mb: 4,
+                    backgroundColor: !isUpcoming ? 'success.main' : 'transparent',
                   }}
                 >
                   <CardContent>
-                    <Typography style={{ display: 'flex', justifyContent: 'center' }} variant="h6" color={isUpcoming ? 'primary' : 'white'}>
+                    <Typography 
+                      variant="h6" 
+                      align="center"
+                      color={isUpcoming ? 'primary' : 'custom.white.main'}
+                      sx={{ mb: 2 }}
+                    >
                       {isUpcoming ? 'Upcoming' : 'Completed'}
                     </Typography>
-                    <Typography variant="subtitle1">
-                      <strong>Name:</strong> {item.name}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      <strong>Email:</strong> {item.email}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      <strong>Phone:</strong> {item.phone}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      <strong>Service Type:</strong> {item.serviceType}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      <strong>Date:</strong> {bookingDate.toLocaleDateString()}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      <strong>Slot:</strong> {item.slot}
-                    </Typography>
+                    {[
+                      { label: 'Name', value: item.name },
+                      { label: 'Email', value: item.email },
+                      { label: 'Phone', value: item.phone },
+                      { label: 'Service Type', value: item.serviceType },
+                      { label: 'Date', value: bookingDate.toLocaleDateString() },
+                      { label: 'Slot', value: item.slot }
+                    ].map((field, fieldIndex) => (
+                      <Typography 
+                        key={fieldIndex} 
+                        variant="subtitle1" 
+                        sx={{ mb: 1 }}
+                      >
+                        <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>
+                          {field.label}:
+                        </Box>
+                        {field.value}
+                      </Typography>
+                    ))}
                   </CardContent>
                 </Card>
               );
@@ -138,16 +151,26 @@ const BookingDetails = () => {
               No data found.
             </Typography>
           )}
-        </div>
-      ) : 
-      <div style={{display:'flex',justifyContent:'center',margin:'20px'}}>
-         <h2>
-            
-            no data found...
-            </h2> 
-
-      </div>
-      
+        </Box>
+      ) : (
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            minHeight: '200px',
+            mt: 4
+          }}
+        >
+          <Typography 
+            variant="h5" 
+            color="text.secondary"
+            align="center"
+          >
+            No bookings found. Try a different search.
+          </Typography>
+        </Box>
+      )
       }
     </Container>
   );

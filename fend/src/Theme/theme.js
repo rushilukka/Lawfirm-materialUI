@@ -34,10 +34,30 @@ let theme = createTheme({
       my_bg: {
         main: '#e6e2d3', // Sand
       },
+      appBg: {
+        main: '#282c34', // App background
+      },
+      reactBlue: {
+        main: '#61dafb', // React blue
+      },
+      white: {
+        main: '#ffffff',
+      },
+      black: {
+        main: '#000000',
+      },
+      lightWhite: {
+        main: 'rgba(255,255,255,0.05)',
+      },
+      lighterWhite: {
+        main: 'rgba(255,255,255,0.08)',
+      },
     },
   },
   typography: {
     fontFamily: "'Roboto', 'Arial', sans-serif",
+    fontSizeBase: '16px',
+    fontSizeCalc: 'calc(10px + 2vmin)',
     h1: {
       fontFamily: "'Merriweather', serif",
       fontWeight: 700,

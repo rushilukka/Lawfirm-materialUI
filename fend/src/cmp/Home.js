@@ -12,7 +12,7 @@ const HomePage = () => {
     <Box component="main">
       <Box
         sx={{
-          backgroundColor: 'black',
+          backgroundColor: theme.palette.custom.black.main,
           opacity: 0.8,
           width: '100%',
           overflow: 'hidden'

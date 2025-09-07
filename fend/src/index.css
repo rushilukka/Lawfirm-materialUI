@@ -1,9 +1,16 @@
 /* index.css */
+:root {
+  --app-bg-color: #282c34;
+  --white-color: #ffffff;
+  --react-blue: #61dafb;
+  --font-size-calc: calc(10px + 2vmin);
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: var(--roboto-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -30,18 +37,18 @@ code {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: var(--app-bg-color);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: var(--font-size-calc);
+  color: var(--white-color);
 }
 
 .App-link {
-  color: #61dafb;
+  color: var(--react-blue);
 }
 
 @keyframes App-logo-spin {

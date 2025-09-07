@@ -38,13 +38,13 @@ export default function Footer() {
 
   const contactBoxSx = {
     p: { xs: 2, sm: 3 },
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: theme.palette.custom.lightWhite.main,
     borderRadius: 1,
     height: '100%',
     transition: 'transform 0.3s ease-in-out',
     '&:hover': {
       transform: 'translateY(-5px)',
-      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      backgroundColor: theme.palette.custom.lighterWhite.main,
     }
   };
 

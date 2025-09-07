@@ -1,8 +1,9 @@
-// components/Loader.js
 import React from "react";
+import { useTheme } from '@mui/material/styles';
 import { Box, CircularProgress, Typography } from "@mui/material";
 
 const Loader = ({ message = "Loading..." }) => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -11,7 +12,7 @@ const Loader = ({ message = "Loading..." }) => {
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: "rgba(255, 255, 255, 0.9)", // Light overlay
+        backgroundColor: theme.palette.custom.lighterWhite.main,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

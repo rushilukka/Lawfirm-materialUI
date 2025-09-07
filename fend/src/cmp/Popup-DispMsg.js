@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Button,
@@ -12,6 +13,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 function DispMsgPopup({ msg }) {
+  const theme = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -37,12 +39,12 @@ function DispMsgPopup({ msg }) {
           position: "fixed",
           top: "200px",
           right: "30px",
-          backgroundColor: "#FFC107", // Vibrant yellow
-          color: "black",
-          fontSize: "1.2rem",
+          backgroundColor: theme.palette.accent.main,
+          color: theme.palette.custom.black.main,
+          fontSize: theme.typography.button.fontSize.md,
           border: "none",
           '&:hover': {
-            backgroundColor: "#FFB300", // Slightly darker yellow on hover
+            backgroundColor: theme.palette.accent.dark,
           },
         }}
       >
@@ -66,9 +68,9 @@ function DispMsgPopup({ msg }) {
           id="notification-dialog-title"
           sx={{
 
-              backgroundColor: "#FFC107", // Gold
-            color: "#000", // Black text
-            fontSize: "1.6rem",
+              backgroundColor: theme.palette.accent.main,
+            color: theme.palette.custom.black.main,
+            fontSize: theme.typography.h2.fontSize.md,
             fontWeight: "bold",
             textAlign: "center",
             padding: "16px 24px",
@@ -81,9 +83,8 @@ function DispMsgPopup({ msg }) {
         {/* Dialog Content */}
         <DialogContent
           sx={{
-            // backgroundColor: "#F9F9F9", // Light background for content
-            color: "#333", // Dark text color
-            fontSize: "1.2rem",
+            color: theme.palette.text.primary,
+            fontSize: theme.typography.body1.fontSize.md,
             textAlign: "center",
             padding: "24px",
           }}
@@ -113,14 +114,14 @@ function DispMsgPopup({ msg }) {
             variant="contained"
             onClick={closePopup}
             sx={{
-              backgroundColor: "#FFB300", // Vibrant yellow
-              color: "#000", // Black text
-              fontSize: "1.2rem",
+              backgroundColor: theme.palette.accent.main,
+              color: theme.palette.custom.black.main,
+              fontSize: theme.typography.button.fontSize.md,
               fontWeight: "bold",
               borderRadius: "8px",
               padding: "8px 24px",
               '&:hover': {
-                backgroundColor: "#FFA000", // Slightly darker shade
+                backgroundColor: theme.palette.accent.dark,
               },
             }}
           >
