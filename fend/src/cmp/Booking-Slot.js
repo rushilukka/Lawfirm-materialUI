@@ -1,8 +1,17 @@
-import React, { useState } from "react";
-import { FormControl, RadioGroup, FormControlLabel, Radio, FormLabel } from "@mui/material";
+// Booking-Slot.jsx
+import React, { useState, useMemo } from "react";
+import { FormControl, RadioGroup, FormControlLabel, Radio, FormLabel, FormHelperText,Typography,} from "@mui/material";
 
-const SlotSelector = ({ onSlotChange,slotDetails }) => {
+const BookingSlot = ({ onSlotChange, slotDetails = [], isDateSelected = false }) => {
   const [selectedSlot, setSelectedSlot] = useState("");
+
+  const hasAnySlot = slotDetails.length > 0;
+  const hasEnabledSlot = useMemo(
+    () => slotDetails.some(s => !s.disabled),
+    [slotDetails]
+  );
+
+  const shouldDisableGroup = !isDateSelected || !hasAnySlot || !hasEnabledSlot;
 
   const handleSlotChange = (event) => {
     const slot = event.target.value;
@@ -12,21 +21,48 @@ const SlotSelector = ({ onSlotChange,slotDetails }) => {
     //********* Pass the selected slot value to the parent
     onSlotChange(slot); 
   };
- 
+
   return (
-    <FormControl required component="fieldset">
+    <FormControl required component="fieldset"
+    sx={{
+        // Hide the red asterisk from required FormLabel
+        "& .MuiFormLabel-asterisk": { display: "none" },
+      }}>
       <FormLabel component="legend">Select Slot</FormLabel>
-      <RadioGroup value={selectedSlot} onChange={handleSlotChange}>
-      {slotDetails.map((slot, index) => (
+
+      {/* Notes, per your rules */}
+      {!isDateSelected ? (
+        <FormHelperText sx={{ fontSize: 12, mb: 1 }}>
+          Select a date to enable slots.
+        </FormHelperText>
+      ) : !hasAnySlot || !hasEnabledSlot ? (
+        <FormHelperText sx={{ fontSize: 12, mb: 1, color: "error.main" }}>
+          No slots available for selected date
+        </FormHelperText>
+      ) : (
+        <FormHelperText variant="caption" sx={{ fontSize: 12, color: "text.secondary", mb: 1 }}>
+          (Note : Can select only one slot at a time)
+        </FormHelperText>
+      )}
+
+      <RadioGroup value={selectedSlot} onChange={handleSlotChange}
+        sx={{
+          pointerEvents: shouldDisableGroup ? "none" : "auto",
+          opacity: shouldDisableGroup ? 0.5 : 1,
+        }}
+      >
+        {slotDetails.map((slot, idx) => (
           <FormControlLabel
-            key={index} // Key should be unique for each element in the list
-            control={<Radio value={slot.value} slotDetailsd={slot.slotDetailsd} disabled={slot.disabled}/>}
+            key={slot.value ?? idx}
+            value={slot.value}
+            control={<Radio />}
             label={slot.value}
+            disabled={shouldDisableGroup || slot.disabled}
           />
         ))}
-    </RadioGroup>
+      </RadioGroup>
     </FormControl>
   );
 };
 
-export default SlotSelector;
+export default BookingSlot;

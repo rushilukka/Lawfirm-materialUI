@@ -35,10 +35,10 @@ const Booking = () => {
   const [dispMsg, setDispMsg] = useState("No Notification");
   const [bookedSlot, setBookedSlot] = useState([]);
   const [slotDetails, setslotDetails] = useState([
-    { value: "6:00-6:45", disabled: false },
-    { value: "7:00-7:45", disabled: false },
-    { value: "8:00-8:45", disabled: false },
-    { value: "9:00-9:45", disabled: false },
+    { value: "6:00-6:45", disabled: true },
+    { value: "7:00-7:45", disabled: true },
+    { value: "8:00-8:45", disabled: true },
+    { value: "9:00-9:45", disabled: true },
   ]);
 
   const [formData, setFormData] = useState({
@@ -75,7 +75,7 @@ const Booking = () => {
     });
     setslotDetails(updatedSlots);
     }, [bookedSlot, formData.date]); // Run when bookedSlot changes
-  
+
   
    
   //functions----------------------------------------------------
@@ -286,14 +286,14 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
     ...prevData,
     slot: newSlot, // Update the date field in the form data
   }));
-  console.log("Selected Slot:", slot); // For debugging
+
   };
  
-  const GetAvailableSlot = async (newDate) => {
-    try{ 
+const GetAvailableSlot = async (newDate) => {
+  try{
     
     //  const response = await fetch('http://localhost:5000/deleteEnteries',{
-     const response = await fetch('http://localhost:5000/getAvailableSlot-Me-2',{
+    const response = await fetch('http://localhost:5000/getAvailableSlot-Me-2',{
        method:'POST',
        headers: {
          "Content-Type": "application/json",
@@ -301,23 +301,28 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
        body: JSON.stringify({
         date: newDate
       }),
-     });
+    });
      if (!response.ok) {
        throw new Error("Network response was not ok");
      }
  
-     const data = await response.json();
-     
-     
-     const day = String(formData?.date?.getDate()).padStart(2, "0");
-     const month = String(formData?.date?.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
-     const year = formData?.date?.getFullYear();
-       if(data.length >3 ) setDispMsg(`No slot available on ${day}/${month}/${year}`) 
-     setBookedSlot(data);
+    const data = await response.json();
+
+    // Use newDate directly
+    const day = String(newDate.getDate()).padStart(2, "0");
+    const month = String(newDate.getMonth() + 1).padStart(2, "0");
+    const year = newDate.getFullYear();
+
+    if (Array.isArray(data) && data.length > 3) {
+      setDispMsg(`No slot available on ${day}/${month}/${year}`);
+    }
+
+    // Expecting 'data' to be an array of booked slot values like ["6:00-6:45", ...]
+    setBookedSlot(data);
     } 
    catch (error) {
      console.error("There has been a problem with your fetch operation:", error);
-    }
+  }
    }
    
    const { name, address, email, phone, serviceType, date, slot, caseBrief,pincode } = formData;
@@ -479,10 +484,10 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <BookingSlot 
-                    onSlotChange={handleSlotChange} 
-                    slotDetails={slotDetails} 
-                    required
+                  <BookingSlot
+                    onSlotChange={handleSlotChange}
+                    slotDetails={slotDetails}
+                    isDateSelected={Boolean(formData.date)}
                   />
                 </Grid>
               </Grid>
