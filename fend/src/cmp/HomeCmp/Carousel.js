@@ -1,6 +1,6 @@
 import Carousel from 'react-bootstrap/Carousel';
-import './Carousels.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import carouselimg from '../../img/law3_enhanced.jpg'; // Replace with the actual path to your image
 
 export default function CarouselReady() {
   return (
@@ -12,7 +12,7 @@ export default function CarouselReady() {
               <img
                 className="w-100 img-phone"
                 style={{ objectFit: "cover" }}
-                src={require("../img/law3_enhanced.jpg")}
+                src={carouselimg}
                 alt="First slide"
               />
               <Carousel.Caption>
@@ -32,7 +32,7 @@ export default function CarouselReady() {
               <img
                 className="w-100 img-phone"
                 style={{ objectFit: "cover" }}
-                src={require("../img/law3_enhanced.jpg")}
+                src={carouselimg}
                 alt="Second slide"
               />
               <Carousel.Caption>
@@ -52,7 +52,7 @@ export default function CarouselReady() {
               <img
                 className="w-100 img-phone"
                 style={{ objectFit: "cover" }}
-                src={require("../img/law3_enhanced.jpg")}
+                src={carouselimg}
                 alt="Third slide"
               />
               <Carousel.Caption>
