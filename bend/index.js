@@ -3,16 +3,17 @@ const app = express();
 const import_router = require('./routing/routing');
 const cors = require('cors');
 const connectDB = require('./db-connect/connection');
+const { SERVER, DATABASE } = require('./constants/constants');
 
-connectDB('mongodb+srv://rushilukka315:123@cluster0.v9tpnnj.mongodb.net/LawFirm-new?retryWrites=true&w=majority&appName=Cluster0')
-  
-.then(console.log('Connected')).catch((err) => console.error(err));;
+connectDB(DATABASE.MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://your-production-domain.com']
-  }));
+    origin: SERVER.ALLOWED_ORIGINS
+}));
 app.use('/', import_router);
-app.listen(5000, () => console.log("server started"));
+app.listen(SERVER.PORT, () => console.log(`Server started on port ${SERVER.PORT}`));
 

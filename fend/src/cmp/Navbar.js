@@ -21,7 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
 import CallIcon from '@mui/icons-material/Call';
 
-import logo from './img/logo-adv1.png';
+import logo from '../img/logo-adv1.png';
 import Disclaimer from './Popup-Disclaimer';
 
 const Navbar = () => {
