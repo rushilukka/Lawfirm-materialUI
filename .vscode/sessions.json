@@ -1,0 +1,40 @@
+{
+    "$schema": "https://cdn.statically.io/gh/nguyenngoclongdev/cdn/main/schema/v11/terminal-keeper.json",
+    "theme": "tribe",
+    "active": "npmStart fend bend",
+    "activateOnStartup": true,
+    "keepExistingTerminals": false,
+    "sessions": {
+        "default": [
+            {
+                "name": "hello",
+                "autoExecuteCommands": true,
+                "icon": "person",
+                "color": "terminal.ansiGreen",
+                "commands": [
+                    "echo hello"
+                ]
+            }
+        ],
+        "npmStart fend bend": [
+            {
+                "name": "fend",
+                "autoExecuteCommands": true,
+                "icon": "folder",
+                "color": "terminal.ansiBlue",
+                "commands": [
+                    "cd fend; npm start"
+                ]
+            },
+            {
+                "name": "bend",
+                "autoExecuteCommands": true,
+                "icon": "folder",
+                "color": "terminal.ansiBlue",
+                "commands": [
+                    "cd bend; npm start"
+                ]
+            }
+        ]
+    }
+}
