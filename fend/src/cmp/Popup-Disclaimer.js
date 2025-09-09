@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
+import { createPortal } from "react-dom";
+import { useTheme } from "@mui/material/styles";
 import {
   Box,
   Button,
@@ -12,16 +14,19 @@ import {
   ListItemText,
 } from "@mui/material";
 
-function Disclaimer() {
+/**
+ * DisclaimerPortal: A reusable dialog component that can be opened via ref
+ */
+const DisclaimerPortal = forwardRef((_, ref) => {
+  const theme = useTheme();
   const [isOpen, setIsOpen] = useState(true);
+  const buttonRef = useRef(null);
 
-  const openPopup = () => {
-    setIsOpen(true);
-  };
-
-  const closePopup = () => {
-    setIsOpen(false);
-  };
+  // Expose open/close methods to parent via ref
+  useImperativeHandle(ref, () => ({
+    open: () => setIsOpen(true),
+    close: () => setIsOpen(false),
+  }));
 
   useEffect(() => {
     if (isOpen) {
@@ -29,125 +34,135 @@ function Disclaimer() {
     } else {
       document.body.classList.remove("popup-open");
     }
-
-    // Cleanup effect when the component unmounts
-    return () => {
-      document.body.classList.remove("popup-open");
-    };
+    return () => document.body.classList.remove("popup-open");
   }, [isOpen]);
 
-  // Learn Event default Enter click
-  const buttonRef = useRef(null);
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      buttonRef.current.click();
-    }
-  };
-
+  // Disable ESC key close
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter" && buttonRef.current) {
+        buttonRef.current.click();
+      }
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
     };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  return (
-    <Box>
-      {/* Disclaimer Button */}
-      <Button
-        variant="contained"
-        color="black"
-        onClick={openPopup}
+  if (!isOpen) return null;
+
+  return createPortal(
+    <Dialog
+      open={isOpen}
+      onClose={() => {}} // prevent backdrop/ESC close
+      maxWidth="sm"
+      fullWidth
+      aria-labelledby="disclaimer-title"
+      sx={{
+        "& .MuiDialog-paper": {
+          borderRadius: "12px",
+          margin: { xs: 2, sm: 4 },
+          backgroundColor: theme.palette.custom.white.main,
+          boxShadow: "0px 8px 32px rgba(0,0,0,0.25)",
+          maxHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+        },
+        "& .MuiBackdrop-root": {
+          backdropFilter: "blur(6px)",
+          backgroundColor: "rgba(0,0,0,0.3)",
+        },
+      }}
+    >
+      <DialogTitle
+        id="disclaimer-title"
         sx={{
-          display: { xs: "none", lg: "block" },
-          color:'black',
-          mb: 2,
-          backgroundColor: "#FFD700", // Gold color for the button
-          fontSize: "1.2rem", // Increase font size of the button
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.custom.white.main,
+          fontWeight: theme.typography.h2.fontWeight,
+          fontSize: theme.typography.h2.fontSize,
+          textAlign: "center",
+          py: 2,
+          borderTopLeftRadius: "12px",
+          borderTopRightRadius: "12px",
         }}
       >
         Disclaimer
-      </Button>
+      </DialogTitle>
 
-      {/* Disclaimer Popup */}
-      <Dialog
-        open={isOpen}
-        onClose={closePopup}
-        maxWidth="sm"
-        fullWidth
-        aria-labelledby="disclaimer-title"
-         
+      {/* Scrollable Content */}
+      <DialogContent
+        dividers
+        sx={{
+          color: theme.palette.primary.main,
+          fontSize: theme.typography.body1.fontSize,
+          p: { xs: 2, sm: 3 },
+          overflowY: "auto",
+        }}
       >
-        <DialogTitle
-          id="disclaimer-title"
-          sx={{
-            backgroundColor: "#FFD700", // Gold color for the header
-            color: "black",
-            fontSize: "1.5rem", // Larger title size
-            fontWeight: "bold", // Bold title
-          }}
-        >
-          Disclaimer
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            backgroundColor: "#333", // Dark background for content area
-            color: "white",
-            fontSize: "1.1rem", // Larger text size for content
-          }}
-        >
-          <Typography variant="body1" paragraph>
-            I am not a lawyer, but I can provide some general information on common
-            disclaimers that law firms often include on their websites in India. However,
-            it's essential to consult with legal counsel to ensure that your specific
-            disclaimer meets all legal requirements and addresses your firm's unique needs.
-            Here are some typical disclaimers that you might consider:
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemText
-                primary="No Attorney-Client Relationship"
-                secondary="Visiting the website or using its information does not create an attorney-client relationship between the visitor and the law firm."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Informational Purposes Only"
-                secondary="The content on the website is for informational purposes only and should not be construed as legal advice. Encourage visitors to seek legal advice from a qualified attorney for their specific situations."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Jurisdictional Limitations"
-                secondary="Mention any limitations on the geographic areas or jurisdictions in which your firm practices law. This can help manage expectations of potential clients."
-              />
-            </ListItem>
-          </List>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            backgroundColor: "#FFD700", // Gold background for actions section
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            variant="contained"
-            color="secondary"
-            ref={buttonRef}
-            onClick={closePopup}
-            sx={{
-              backgroundColor: "#FFD700", // Gold color for the button
-              color: "black", // Black text color
-              fontSize: "1.1rem", // Larger button font size
-            }}
-          >
-            Accept
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
-}
+        <Typography variant="body1" paragraph>
+          I am not a lawyer, but I can provide some general information on common disclaimers
+          that law firms often include on their websites in India. However, it’s essential
+          to consult with legal counsel to ensure your specific disclaimer meets legal
+          requirements and addresses your firm’s unique needs. Typical disclaimers include:
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemText
+              primary="No Attorney-Client Relationship"
+              secondary="Visiting the website or using its information does not create an attorney-client relationship."
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Informational Purposes Only"
+              secondary="The content on the website is for informational purposes only and should not be construed as legal advice."
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Jurisdictional Limitations"
+              secondary="Mention any limitations on the jurisdictions in which your firm practices law to manage expectations."
+            />
+          </ListItem>
+        </List>
+      </DialogContent>
 
-export default Disclaimer;
+      {/* Sticky Accept Button */}
+      <DialogActions
+        sx={{
+          backgroundColor: theme.palette.primary.main,
+          justifyContent: "center",
+          py: 2,
+          borderBottomLeftRadius: "12px",
+          borderBottomRightRadius: "12px",
+          position: "sticky",
+          bottom: 0,
+        }}
+      >
+        <Button
+          variant="contained"
+          ref={buttonRef}
+          onClick={() => setIsOpen(false)}
+          sx={{
+            backgroundColor: theme.palette.custom.white.main,
+            color: theme.palette.primary.main,
+            fontWeight: 600,
+            px: 4,
+            "&:hover": {
+              backgroundColor: theme.palette.custom.white.main,
+              opacity: 0.9,
+            },
+          }}
+        >
+          Accept
+        </Button>
+      </DialogActions>
+    </Dialog>,
+    document.body // Portal target
+  );
+});
+
+export default DisclaimerPortal;

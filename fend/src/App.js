@@ -13,8 +13,7 @@ import BookingDetails from './cmp/BookingDetails/Booking-Details';
 function App() {
   return (
     <ThemeProvider theme={theme}> {/* Apply the theme globally */}
-      
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <Navbar /> {/* Add Navbar for navigation */}
          <Routes>
           <Route path="/" element={<HomePage />} />
@@ -23,7 +22,6 @@ function App() {
           <Route path="/book-slot" element={<BookSlot />} />
           <Route path="/booking-details" element={<BookingDetails/>} />
         </Routes>
-
         <Footer/>
       </Router>
     </ThemeProvider>

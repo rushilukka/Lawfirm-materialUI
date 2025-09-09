@@ -1,8 +1,16 @@
+/* index.css */
+:root {
+  --app-bg-color: #282c34;
+  --white-color: #ffffff;
+  --react-blue: #61dafb;
+  --font-size-calc: calc(10px + 2vmin);
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: var(--roboto-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -10,4 +18,141 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* App.css */
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: var(--app-bg-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-calc);
+  color: var(--white-color);
+}
+
+.App-link {
+  color: var(--react-blue);
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Disclaimer.css */
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-width: 80%;
+  text-align: center;
+}
+
+.close-button {
+  position: absolute;
+  width: 10%;
+  height: 10%;
+  padding: 15;
+  right: 0px;
+  cursor: pointer;
+  font-size: 40px;
+  color: #333;
+}
+
+.close-button:hover {
+  transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+  .popup-container {
+    position: fixed;
+    display: flex;
+    top: 0%;
+    font-size: small;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .popup-content {
+    background-color: #fff;
+    border-radius: 5px;
+    position: relative;
+    font-size: small;
+    max-width: 100%;
+    text-align: center;
+  }
+}
+
+/* Booking.css */
+.custom-datepicker-container {
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.custom-datepicker-input {
+  font-size: 16px;
+  padding: 8px;
+}
+
+.custom-datepicker-input:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+/* Carousels.css */
+@media only screen and (max-width: 600px) {
+  .img-phone {
+    width: 100%;
+    max-width: 100%;
+    filter: none;
+    opacity: 1;
+    height: 30vh;
+    object-fit: cover;
+    margin-bottom: 0px;
+  }
+  
+  .car {
+    background-color: black;
+    height: 350px;
+  }
 }

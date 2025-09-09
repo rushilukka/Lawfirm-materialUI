@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Container, Grid, Typography, Button, Link as MuiLink } from '@mui/material';
 import { Link } from 'react-router-dom';
-import aboutImage from './img/about.jpg'; // Replace with the actual path to your image
+import aboutImage from '../img/about.jpg'; // Replace with the actual path to your image
 import AboutContent from './About-content';
 export default function About() {
   return (

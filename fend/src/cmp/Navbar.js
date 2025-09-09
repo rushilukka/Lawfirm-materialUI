@@ -1,36 +1,35 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  AppBar, 
-  Toolbar, 
-  Button, 
-  Container, 
-  Box, 
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Container,
+  Box,
   Typography,
   IconButton,
   Drawer,
   List,
   ListItem,
   ListItemText,
-  useMediaQuery,
   ListItemButton,
-  useTheme
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import logo from './img/logo-adv1.png';
-import Disclaimer from './Popup-Disclaimer';
 import EmailIcon from '@mui/icons-material/Email';
 import CallIcon from '@mui/icons-material/Call';
 
+import logo from '../img/logo-adv1.png';
+import DisclaimerPortal from './Popup-Disclaimer';
+
 const Navbar = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  const disclaimerRef = React.useRef();
+  const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
   const navLinks = [
     { text: 'Home', path: '/' },
@@ -40,210 +39,204 @@ const Navbar = () => {
     { text: 'Book a Slot', path: '/book-slot' },
   ];
 
-  const drawer = (
-    <Box sx={{ width: 250, p: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-        <IconButton onClick={handleDrawerToggle}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
-      <List>
-        {navLinks.map((link) => (
-          <ListItem key={link.text} disablePadding>
-            <ListItemButton
-              component={Link}
-              to={link.path}
-              onClick={handleDrawerToggle}
-              sx={{
-                py: 1.5,
-                '&:hover': {
-                  bgcolor: theme.palette.accent.main,
-                  color: 'black',
-                },
-              }}
-            >
-              <ListItemText primary={link.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-        <ListItem disablePadding>
-          <ListItemButton
-            component={Disclaimer}
-            sx={{
-              py: 1.5,
-              mt: 2,
-              bgcolor: 'gold',
-              color: 'black',
-              '&:hover': {
-                bgcolor: theme.palette.accent.main,
-              },
-            }}
-          >
-            <ListItemText primary="Disclaimer" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </Box>
-  );
-
   return (
     <>
-      <AppBar position="sticky" color="primary" elevation={4}>
-        <Toolbar sx={{ 
-          flexDirection: 'column',
-          height: { xs: 'auto', md: '170px' },
-          py: { xs: 2, md: 0 }
-        }}>
-          <Container maxWidth="xl" sx={{ width: '100%' }}>
-            <Box sx={{
+      <AppBar
+        position="sticky"
+        color="primary"
+        elevation={2}
+        sx={{
+          // small vertical padding to keep it slim
+          py: 0.5,
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar
+            disableGutters
+            variant="dense"
+            sx={{
+              minHeight: { xs: 56, sm: 60 }, // compact height
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%'
-            }}>
-              {/* Logo Section */}
-              <Box
-                component={Link}
-                to="/"
+              gap: 1.5,
+            }}
+          >
+            {/* Brand */}
+            <Box
+              component={Link}
+              to="/"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                textDecoration: 'none',
+                color: 'inherit',
+                mr: 1,
+              }}
+            >
+              <img
+                src={logo}
+                alt="Vidhigna Law Firm"
+                style={{ height: isMdDown ? 36 : 44, width: 'auto' }}
+              />
+              <Typography
+                variant="h6"
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  textDecoration: 'none',
-                  flex: { xs: '1', md: '0 0 auto' }
+                  ml: 1,
+                  fontWeight: 700,
+                  display: { xs: 'none', sm: 'block' },
                 }}
               >
-                <img
-                  src={logo}
-                  alt="Law Firm Logo"
-                  style={{
-                    height: isMobile ? '60px' : '120px',
-                    width: 'auto',
-                    marginRight: '0.5rem',
-                  }}
-                />
-                <Typography 
-                  variant={isMobile ? "h6" : "h4"} 
-                  component="h1" 
-                  color="white"
-                  sx={{ 
-                    display: { xs: 'none', sm: 'block' }
+                Vidhigna Law Firm
+              </Typography>
+            </Box>
+
+            <Box sx={{ flexGrow: 1 }} />
+
+            {/* Desktop Nav */}
+            {!isMdDown && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                {navLinks.map((link) => (
+                  <Button
+                    key={link.text}
+                    component={Link}
+                    to={link.path}
+                    color="inherit"
+                    size="small"
+                    sx={{
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      '&:hover': {
+                        color: (theme.palette.accent && theme.palette.accent.main) || 'gold',
+                        transform: 'translateY(-1px)',
+                      },
+                      transition: 'all .15s ease',
+                    }}
+                  >
+                    {link.text}
+                  </Button>
+                ))}
+
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => disclaimerRef.current.open()}
+                  sx={{
+                    ml: 0.5,
+                    bgcolor: 'gold',
+                    color: 'black',
+                    textTransform: 'none',
+                    fontWeight: 700,
+                    '&:hover': {
+                      bgcolor: (theme.palette.accent && theme.palette.accent.main) || 'gold',
+                    },
                   }}
                 >
-                  Vidhigna Law Firm
-                </Typography>
-              </Box>
+                  Disclaimer
+                </Button>
 
-              {/* Mobile Menu Button */}
-              {isMobile && (
+
                 <IconButton
                   color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={handleDrawerToggle}
-                  sx={{ ml: 2 }}
+                  href="tel:+919428669847"
+                  aria-label="Call"
+                  sx={{ ml: 0.5 }}
                 >
-                  <MenuIcon />
+                  <CallIcon />
                 </IconButton>
-              )}
+                <IconButton
+                  color="inherit"
+                  href="mailto:info@lawfirm.com"
+                  aria-label="Email"
+                >
+                  <EmailIcon />
+                </IconButton>
+              </Box>
+            )}
 
-              {/* Desktop Navigation */}
-              {!isMobile && (
-                <Box sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  ml: 3,
-                  borderLeft: '1px solid white',
-                  pl: 3
-                }}>
-                  {/* Contact Information */}
-                  <Box sx={{
-                    display: 'flex',
-                    gap: 3,
-                    mb: 2,
-                    borderBottom: '1px solid white',
-                    pb: 2
-                  }}>
-                    <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <CallIcon /> +91 9428669847
-                    </Typography>
-                    <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <EmailIcon /> info@lawfirm.com
-                    </Typography>
-                  </Box>
-
-                  {/* Navigation Links */}
-                  <Box sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    gap: 2,
-                    mb: 2
-                  }}>
-                    {navLinks.map((link) => (
-                      <Button
-                        key={link.text}
-                        color="inherit"
-                        variant="outlined"
-                        component={Link}
-                        to={link.path}
-                        sx={{
-                          textTransform: 'capitalize',
-                          fontWeight: 700,
-                          '&:hover': {
-                            color: theme.palette.accent.main,
-                            transform: 'scale(1.05)',
-                          },
-                          transition: 'all 0.2s ease-in-out',
-                        }}
-                      >
-                        {link.text}
-                      </Button>
-                    ))}
-                  </Box>
-
-                  {/* Disclaimer Button */}
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button
-                      variant="contained"
-                      component={Disclaimer}
-                      sx={{
-                        bgcolor: 'gold',
-                        color: 'black',
-                        textTransform: 'capitalize',
-                        fontWeight: 700,
-                        '&:hover': {
-                          bgcolor: theme.palette.accent.main,
-                          transform: 'scale(1.05)',
-                        },
-                        transition: 'all 0.2s ease-in-out',
-                      }}
-                    >
-                      Disclaimer
-                    </Button>
-                  </Box>
-                </Box>
-              )}
-            </Box>
-          </Container>
-        </Toolbar>
+            {/* Mobile menu button */}
+            {isMdDown && (
+              <IconButton
+                color="inherit"
+                aria-label="open navigation"
+                edge="end"
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+          </Toolbar>
+        </Container>
       </AppBar>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Drawer */}
       <Drawer
         variant="temporary"
         anchor="right"
         open={mobileOpen}
         onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
-        }}
+        ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 250 },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280 },
         }}
       >
-        {drawer}
+        <Box sx={{ p: 2 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 1,
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <img src={logo} alt="Logo" style={{ height: 32 }} />
+              <Typography variant="subtitle1" fontWeight={700}>
+                Vidhigna Law Firm
+              </Typography>
+            </Box>
+            <IconButton onClick={handleDrawerToggle}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          <List>
+            {navLinks.map((link) => (
+              <ListItem key={link.text} disablePadding>
+                <ListItemButton
+                  component={Link}
+                  to={link.path}
+                  onClick={handleDrawerToggle}
+                  sx={{
+                    '&:hover': {
+                      bgcolor: (theme.palette.accent && theme.palette.accent.main) || 'rgba(0,0,0,0.08)',
+                      color: 'black',
+                    },
+                  }}
+                >
+                  <ListItemText primary={link.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+            <ListItem disablePadding sx={{ mt: 1 }}>
+              <ListItemButton onClick={() => disclaimerRef.current.open()}>
+                <ListItemText primary="Disclaimer" />
+              </ListItemButton>
+            </ListItem>
+          </List>
+
+          <Box sx={{ display: 'flex', gap: 1.5, mt: 2, px: 1 }}>
+            <Button startIcon={<CallIcon />} href="tel:+919428669847">
+              Call
+            </Button>
+            <Button startIcon={<EmailIcon />} href="mailto:info@lawfirm.com">
+              Email
+            </Button>
+          </Box>
+        </Box>
       </Drawer>
+      {/* 🔹 Mount Disclaimer Portal once at the end of Navbar */}
+      <DisclaimerPortal ref={disclaimerRef} />
     </>
   );
 };
