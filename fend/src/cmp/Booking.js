@@ -237,7 +237,7 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
         date: filterDate(formData.date)
       };
 
-      const response = await fetch("http://localhost:5000/booking", {
+      const response = await fetch("http://localhost:5000/api/bookings/create-booking", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -291,8 +291,7 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
 const GetAvailableSlot = async (newDate) => {
   try{
     
-    //  const response = await fetch('http://localhost:5000/deleteEnteries',{
-    const response = await fetch('http://localhost:5000/getAvailableSlot-Me-2',{
+    const response = await fetch('http://localhost:5000/api/bookings/available-slots',{
        method:'POST',
        headers: {
          "Content-Type": "application/json",
