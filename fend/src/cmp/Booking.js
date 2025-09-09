@@ -21,6 +21,7 @@ import {
   Grid,
   CircularProgress
 } from '@mui/material';
+import { API_BASE_URL, BOOKING_SERVICE } from '../../constants/constants';
 
 const Booking = () => {
   const theme = useTheme();
@@ -237,7 +238,7 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
         date: filterDate(formData.date)
       };
 
-      const response = await fetch("http://localhost:5000/api/bookings/create-booking", {
+      const response = await fetch(API_BASE_URL + BOOKING_SERVICE.CREATE_BOOKING, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -290,8 +291,8 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
  
 const GetAvailableSlot = async (newDate) => {
   try{
-    
-    const response = await fetch('http://localhost:5000/api/bookings/available-slots',{
+
+    const response = await fetch(API_BASE_URL + BOOKING_SERVICE.GET_AVAILABLE_SLOTS, {
        method:'POST',
        headers: {
          "Content-Type": "application/json",
