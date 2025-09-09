@@ -22,13 +22,13 @@ import EmailIcon from '@mui/icons-material/Email';
 import CallIcon from '@mui/icons-material/Call';
 
 import logo from '../img/logo-adv1.png';
-import Disclaimer from './Popup-Disclaimer';
+import DisclaimerPortal from './Popup-Disclaimer';
 
 const Navbar = () => {
   const theme = useTheme();
   const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
-
+  const disclaimerRef = React.useRef();
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
   const navLinks = [
@@ -119,7 +119,7 @@ const Navbar = () => {
                 <Button
                   variant="contained"
                   size="small"
-                  component={Disclaimer}
+                  onClick={() => disclaimerRef.current.open()}
                   sx={{
                     ml: 0.5,
                     bgcolor: 'gold',
@@ -133,6 +133,7 @@ const Navbar = () => {
                 >
                   Disclaimer
                 </Button>
+
 
                 <IconButton
                   color="inherit"
@@ -218,7 +219,7 @@ const Navbar = () => {
               </ListItem>
             ))}
             <ListItem disablePadding sx={{ mt: 1 }}>
-              <ListItemButton component={Disclaimer}>
+              <ListItemButton onClick={() => disclaimerRef.current.open()}>
                 <ListItemText primary="Disclaimer" />
               </ListItemButton>
             </ListItem>
@@ -234,6 +235,8 @@ const Navbar = () => {
           </Box>
         </Box>
       </Drawer>
+      {/* 🔹 Mount Disclaimer Portal once at the end of Navbar */}
+      <DisclaimerPortal ref={disclaimerRef} />
     </>
   );
 };
