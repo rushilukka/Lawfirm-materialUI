@@ -21,7 +21,7 @@ import {
   Grid,
   CircularProgress
 } from '@mui/material';
-import { API_BASE_URL, BOOKING_SERVICE } from '../../constants/constants';
+import { API_BASE_URL, BOOKING_SERVICE } from '../constants/constants';
 
 const Booking = () => {
   const theme = useTheme();

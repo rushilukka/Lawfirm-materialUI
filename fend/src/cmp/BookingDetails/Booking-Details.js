@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { TextField, Card, CardContent, Button, Container, Typography, Grid, RadioGroup, FormControlLabel, Radio, FormLabel, Box, Alert } from '@mui/material';
-import { API_BASE_URL, BOOKING_SERVICE } from '../../../constants/constants';
+import { API_BASE_URL, BOOKING_SERVICE } from '../../constants/constants';
 
 const BookingDetails = () => {
   const theme = useTheme();
