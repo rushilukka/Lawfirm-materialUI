@@ -38,13 +38,16 @@ class BookingController {
 
   async searchBookings(req, res) {
     try {
-      const { query, filter } = req.body;
+      const userPhoneOrEmail = req.user?.phoneOrEmail;
 
-      if (!query || !filter) {
-        return res.status(400).json({ message: 'Query and filter are required.' });
+      if (!userPhoneOrEmail) {
+        return res.status(401).json({ message: 'Authentication required.' });
       }
 
-      const bookings = await bookingService.searchBookings(query, filter);
+      // Always search by the authenticated user's phone/email
+      const filter = userPhoneOrEmail.includes('@') ? 'email' : 'phone';
+
+      const bookings = await bookingService.searchBookings(userPhoneOrEmail, filter);
       
       if (!bookings) {
         return res.status(400).json({ message: 'Invalid filter provided.' });

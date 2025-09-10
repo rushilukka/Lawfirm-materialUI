@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Box, Button, TextField, Typography, Paper, CircularProgress } from '@mui/material';
 import Popup  from './Popup-DispMsg';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const { sendOtp, loginWithOtp } = useAuth();
@@ -11,6 +12,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const navigate = useNavigate();
 
     const handleSendOtp = async (e) => {
         e.preventDefault();
@@ -34,6 +36,9 @@ const Login = () => {
         try {
             await loginWithOtp(phoneOrEmail, otp);
             setSuccess('Logged in successfully!');
+            setTimeout(() => {
+                navigate('/');
+            }, 1000);
         } catch (error) {
             setError(error.message);
         } finally {

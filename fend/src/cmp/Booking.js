@@ -238,10 +238,14 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
         date: filterDate(formData.date)
       };
 
+
+      // Attach JWT token to booking API call
+      const token = localStorage.getItem('authToken');
       const response = await fetch(API_BASE_URL + BOOKING_SERVICE.CREATE_BOOKING, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify(formattedData),
       });

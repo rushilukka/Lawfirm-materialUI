@@ -1,106 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { TextField, Card, CardContent, Button, Container, Typography, Grid, RadioGroup, FormControlLabel, Radio, FormLabel, Box, Alert } from '@mui/material';
 import { API_BASE_URL, BOOKING_SERVICE } from '../../constants/constants';
+import { useAuth } from '../../context/AuthContext';
+import AuthService from '../../services/AuthService';
 
 const BookingDetails = () => {
   const theme = useTheme();
-  const [query, setQuery] = useState('');
-  const [filter, setFilter] = useState('');
+  const { isAuthenticated } = useAuth();
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
   // Regular expressions for phone and email validation
   const phoneRegex = /^[0-9]{10}$/;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
-  const handleSearch = async () => {
-    // Validate query based on selected filter
-    if (filter === 'phone' && !phoneRegex.test(query)) {
-      setError('Please enter a valid phone number (exactly 10 digits).');
-      return;
-    }
-    if (filter === 'email' && !emailRegex.test(query)) {
-      setError('Please enter a valid email address.');
-      return;
-    }
-    setError(''); // Clear error if validation passes
+  // Effect to fetch user's bookings when authenticated
+  useEffect(() => {
+    const fetchUserBookings = async () => {
+      if (!isAuthenticated) return;
 
-    try {
-      const response = await fetch(API_BASE_URL + BOOKING_SERVICE.SEARCH_BOOKINGS, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query, filter }),
-      });
+      const token = AuthService.getToken();
+      if (!token) return;
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch records');
+      try {
+        setLoading(true);
+        const tokenData = JSON.parse(atob(token.split('.')[1]));
+        setUserInfo(tokenData);
+
+        const response = await fetch(API_BASE_URL + BOOKING_SERVICE.SEARCH_BOOKINGS, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({})  // No need to send query/filter, backend will use JWT data
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch bookings');
+        }
+
+        const data = await response.json();
+        setResult(data);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+        setError(error.message);
+        setResult(null);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const data = await response.json();
-      setResult(data);
-    } catch (error) {
-      console.error('Error fetching records:', error);
-      setResult(null);
-    }
-  };
+    fetchUserBookings();
+  }, [isAuthenticated]);
+
+  // No need for handleSearch anymore as we're automatically fetching user's bookings
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8 }}>
       <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-        Fetch Booking Records
+        Your Booking History
       </Typography>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <FormLabel component="legend" sx={{ mb: 1 }}>Search By</FormLabel>
-          <RadioGroup
-            row
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <FormControlLabel value="phone" control={<Radio />} label="Phone" />
-            <FormControlLabel value="name" control={<Radio />} label="Name" />
-            <FormControlLabel value="email" control={<Radio />} label="Email" />
-          </RadioGroup>
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label={`Enter ${filter ? filter.charAt(0).toUpperCase() + filter.slice(1) : ''}`}
-            variant="outlined"
-            fullWidth
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            disabled={!filter} // Disable text field until a filter is selected
-            error={!!error}
-            helperText={error} // Display error message
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={handleSearch}
-            disabled={!query || !filter} // Disable button until both filter and query are provided
-          >
-            Search
-          </Button>
-        </Grid>
-      </Grid>
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+          <Typography>Loading your bookings...</Typography>
+        </Box>
+      )}
+      {userInfo && (
+        <Alert severity="info" sx={{ mt: 2, mb: 2 }}>
+          Logged in as: {userInfo.phoneOrEmail}
+        </Alert>
+      )}
       {result ? (
-        <Box sx={{ mt: 8 }}>
+        <Box sx={{ mt: 4 }}>
           <Typography variant="h6" gutterBottom>
-            Results:
+            Your Bookings:
           </Typography>
-          {result?.bookings?.length > 0 ? (
-            result.bookings.map((item, index) => {
+          {Array.isArray(result) && result.length > 0 ? (
+            result.map((item, index) => {
               const bookingDate = new Date(item.date);
               const today = new Date();
 
