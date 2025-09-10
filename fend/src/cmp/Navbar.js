@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -16,6 +16,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
@@ -26,10 +27,16 @@ import DisclaimerPortal from './Popup-Disclaimer';
 
 const Navbar = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
   const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const disclaimerRef = React.useRef();
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   const navLinks = [
     { text: 'Home', path: '/' },
@@ -115,6 +122,39 @@ const Navbar = () => {
                     {link.text}
                   </Button>
                 ))}
+
+                {isAuthenticated ? (
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={handleLogout}
+                    sx={{
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      '&:hover': {
+                        color: (theme.palette.accent && theme.palette.accent.main) || 'gold',
+                      },
+                    }}
+                  >
+                    Logout
+                  </Button>
+                ) : (
+                  <Button
+                    component={Link}
+                    to="/login"
+                    color="inherit"
+                    size="small"
+                    sx={{
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      '&:hover': {
+                        color: (theme.palette.accent && theme.palette.accent.main) || 'gold',
+                      },
+                    }}
+                  >
+                    Login
+                  </Button>
+                )}
 
                 <Button
                   variant="contained"
@@ -222,6 +262,25 @@ const Navbar = () => {
               <ListItemButton onClick={() => disclaimerRef.current.open()}>
                 <ListItemText primary="Disclaimer" />
               </ListItemButton>
+            </ListItem>
+            {/* Add login/logout in mobile menu */}
+            <ListItem disablePadding>
+              {isAuthenticated ? (
+                <ListItemButton onClick={() => {
+                  handleLogout();
+                  handleDrawerToggle();
+                }}>
+                  <ListItemText primary="Logout" />
+                </ListItemButton>
+              ) : (
+                <ListItemButton
+                  component={Link}
+                  to="/login"
+                  onClick={handleDrawerToggle}
+                >
+                  <ListItemText primary="Login" />
+                </ListItemButton>
+              )}
             </ListItem>
           </List>
 

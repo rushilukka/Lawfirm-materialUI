@@ -1,0 +1,106 @@
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { Box, Button, TextField, Typography, Paper, CircularProgress } from '@mui/material';
+import Popup  from './Popup-DispMsg';
+
+const Login = () => {
+    const { sendOtp, loginWithOtp } = useAuth();
+    const [phoneOrEmail, setPhoneOrEmail] = useState('');
+    const [otp, setOtp] = useState('');
+    const [otpSent, setOtpSent] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const handleSendOtp = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        try {
+            await sendOtp(phoneOrEmail);
+            setOtpSent(true);
+            setSuccess('OTP sent successfully!');
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        try {
+            await loginWithOtp(phoneOrEmail, otp);
+            setSuccess('Logged in successfully!');
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '100vh',
+                padding: 2
+            }}
+        >
+            <Paper elevation={3} sx={{ padding: 4, maxWidth: 400, width: '100%' }}>
+                <Typography variant="h5" component="h1" gutterBottom align="center">
+                    Login
+                </Typography>
+                
+                <form onSubmit={otpSent ? handleVerifyOtp : handleSendOtp}>
+                    <TextField
+                        fullWidth
+                        label="Phone Number or Email"
+                        value={phoneOrEmail}
+                        onChange={(e) => setPhoneOrEmail(e.target.value)}
+                        margin="normal"
+                        disabled={otpSent}
+                        required
+                    />
+
+                    {otpSent && (
+                        <TextField
+                            fullWidth
+                            label="Enter OTP"
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                            margin="normal"
+                            required
+                        />
+                    )}
+
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        sx={{ mt: 3 }}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <CircularProgress size={24} />
+                        ) : otpSent ? (
+                            'Verify OTP'
+                        ) : (
+                            'Send OTP'
+                        )}
+                    </Button>
+                </form>
+
+                {error && <Popup message={error} variant="error" />}
+                {success && <Popup message={success} variant="success" />}
+            </Paper>
+        </Box>
+    );
+};
+
+export default Login;

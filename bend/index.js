@@ -7,6 +7,7 @@ const express = require('express');
 const app = express();
 const bookingRoutes = require('./routing/bookingRoutes');
 const adminRoutes = require('./routing/adminRoutes');
+const authRoutes = require('./routing/authRoutes');
 const cors = require('cors');
 const connectDB = require('./db-connect/connection');
 const { SERVER, DATABASE } = require('./constants/constants');
@@ -22,6 +23,7 @@ app.use(cors({
 }));
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/admin', adminRoutes);
 
