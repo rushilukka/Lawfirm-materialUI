@@ -1,14 +1,14 @@
 import { API_BASE_URL } from '../constants/constants';
 
 class AuthService {
-    async sendOtp(phoneOrEmail) {
+    async sendOtp(email) {
         try {
             const response = await fetch(`${API_BASE_URL}/api/auth/send-otp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ phoneOrEmail }),
+                body: JSON.stringify({ email }),
             });
 
             const data = await response.json();
@@ -22,14 +22,14 @@ class AuthService {
         }
     }
 
-    async verifyOtp(phoneOrEmail, otp) {
+    async verifyOtp(email, otp) {
         try {
             const response = await fetch(`${API_BASE_URL}/api/auth/verify-otp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ phoneOrEmail, otp }),
+                body: JSON.stringify({ email, otp }),
             });
 
             const data = await response.json();

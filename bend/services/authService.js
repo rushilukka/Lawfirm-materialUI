@@ -26,7 +26,7 @@ class AuthService {
             
             // Save OTP to database
             await Otp.create({
-                phoneOrEmail: email, // keeping field name for backward compatibility
+                email: email, // keeping field name for backward compatibility
                 otp
             });
 
@@ -57,7 +57,7 @@ class AuthService {
         try {
             // Find the most recent OTP for this email
             const otpRecord = await Otp.findOne({
-                phoneOrEmail: email,
+                email: email,
                 otp
             }).sort({ createdAt: -1 });
 
@@ -74,11 +74,11 @@ class AuthService {
             }
 
             // Delete all OTPs for this email after verification
-            await Otp.deleteMany({ phoneOrEmail: email });
+            await Otp.deleteMany({ email: email });
 
             // Generate JWT
             const token = jwt.sign(
-                { phoneOrEmail: email }, // keeping key as phoneOrEmail for backward compatibility
+                { email: email }, // keeping key as email for backward compatibility
                 process.env.JWT_SECRET,
                 { expiresIn: '10d' }
             );

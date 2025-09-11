@@ -6,9 +6,9 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(AuthService.isAuthenticated());
 
-    const loginWithOtp = useCallback(async (phoneOrEmail, otp) => {
+    const loginWithOtp = useCallback(async (email, otp) => {
         try {
-            const data = await AuthService.verifyOtp(phoneOrEmail, otp);
+            const data = await AuthService.verifyOtp(email, otp);
             setIsAuthenticated(true);
             return data;
         } catch (error) {

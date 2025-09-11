@@ -230,7 +230,7 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
       const userToken = AuthService.getToken();
       const tokenData = userToken ? JSON.parse(atob(userToken.split('.')[1])) : null;
       
-      if (!userToken || !tokenData || !tokenData.phoneOrEmail) {
+      if (!userToken || !tokenData || !tokenData.email) {
         throw new Error('Please login to book an appointment');
       }
 
@@ -238,7 +238,7 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
       const formattedData = {
         ...formData,
         date: filterDate(formData.date),
-        email: tokenData.phoneOrEmail.includes('@') ? tokenData.phoneOrEmail : ''
+        email: tokenData.email.includes('@') ? tokenData.email : ''
       };
 
 

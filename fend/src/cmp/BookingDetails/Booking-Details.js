@@ -76,7 +76,7 @@ const BookingDetails = () => {
       )}
       {userInfo && (
         <Alert severity="info" sx={{ mt: 2, mb: 2 }}>
-          Logged in as: {userInfo.phoneOrEmail}
+          Logged in as: {userInfo.email}
         </Alert>
       )}
       {result ? (
