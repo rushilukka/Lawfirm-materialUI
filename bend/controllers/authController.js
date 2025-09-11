@@ -3,13 +3,19 @@ const authService = require('../services/authService');
 class AuthController {
     async sendOTP(req, res) {
         try {
-            const { phoneOrEmail } = req.body;
+            const { email } = req.body;
             
-            if (!phoneOrEmail) {
-                return res.status(400).json({ message: 'Phone number or email is required' });
+            if (!email) {
+                return res.status(400).json({ message: 'Email address is required' });
             }
 
-            await authService.sendOTP(phoneOrEmail);
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return res.status(400).json({ message: 'Invalid email format' });
+            }
+
+            await authService.sendOTP(email);
             res.status(200).json({ message: 'OTP sent successfully' });
         } catch (error) {
             console.error('Error sending OTP:', error);
@@ -19,13 +25,19 @@ class AuthController {
 
     async verifyOTP(req, res) {
         try {
-            const { phoneOrEmail, otp } = req.body;
+            const { email, otp } = req.body;
             
-            if (!phoneOrEmail || !otp) {
-                return res.status(400).json({ message: 'Phone/email and OTP are required' });
+            if (!email || !otp) {
+                return res.status(400).json({ message: 'Email and OTP are required' });
             }
 
-            const token = await authService.verifyOTP(phoneOrEmail, otp);
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return res.status(400).json({ message: 'Invalid email format' });
+            }
+
+            const token = await authService.verifyOTP(email, otp);
             res.status(200).json({ token });
         } catch (error) {
             console.error('Error verifying OTP:', error);

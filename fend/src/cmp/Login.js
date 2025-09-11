@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const { sendOtp, loginWithOtp } = useAuth();
-    const [phoneOrEmail, setPhoneOrEmail] = useState('');
+    const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [otpSent, setOtpSent] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -18,10 +18,19 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setError('Please enter a valid email address');
+            setLoading(false);
+            return;
+        }
+
         try {
-            await sendOtp(phoneOrEmail);
+            await sendOtp(email);
             setOtpSent(true);
-            setSuccess('OTP sent successfully!');
+            setSuccess('OTP sent successfully! Please check your email.');
         } catch (error) {
             setError(error.message);
         } finally {
@@ -34,7 +43,7 @@ const Login = () => {
         setLoading(true);
         setError('');
         try {
-            await loginWithOtp(phoneOrEmail, otp);
+            await loginWithOtp(email, otp);
             setSuccess('Logged in successfully!');
             setTimeout(() => {
                 navigate('/');
@@ -64,11 +73,13 @@ const Login = () => {
                 <form onSubmit={otpSent ? handleVerifyOtp : handleSendOtp}>
                     <TextField
                         fullWidth
-                        label="Phone Number or Email"
-                        value={phoneOrEmail}
-                        onChange={(e) => setPhoneOrEmail(e.target.value)}
+                        label="Email Address"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         margin="normal"
                         disabled={otpSent}
+                        placeholder="Enter your email address"
                         required
                     />
 
