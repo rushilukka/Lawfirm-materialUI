@@ -15,12 +15,21 @@ import {
   ListItemButton,
   useMediaQuery,
   useTheme,
+  Avatar,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
 import CallIcon from '@mui/icons-material/Call';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LoginIcon from '@mui/icons-material/Login';
 
 import logo from '../img/logo-adv1.png';
 import DisclaimerPortal from './Popup-Disclaimer';
@@ -28,14 +37,30 @@ import DisclaimerPortal from './Popup-Disclaimer';
 const Navbar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const disclaimerRef = React.useRef();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
-  const handleLogout = () => {
+  const handleProfileMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleProfileMenuClose = () => setAnchorEl(null);
+  
+  const handleLogoutClick = () => {
+    handleProfileMenuClose();
+    setLogoutDialogOpen(true);
+  };
+
+  const handleLogoutConfirm = () => {
+    setLogoutDialogOpen(false);
     logout();
     navigate('/');
+  };
+
+  const handleLogoutCancel = () => {
+    setLogoutDialogOpen(false);
   };
 
   const navLinks = [
@@ -124,36 +149,32 @@ const Navbar = () => {
                 ))}
 
                 {isAuthenticated ? (
-                  <Button
-                    color="inherit"
-                    size="small"
-                    onClick={handleLogout}
-                    sx={{
-                      textTransform: 'none',
-                      fontWeight: 600,
+                  <IconButton
+                    onClick={handleProfileMenuOpen}
+                    sx={{ 
+                      color: 'inherit',
                       '&:hover': {
                         color: (theme.palette.accent && theme.palette.accent.main) || 'gold',
                       },
                     }}
                   >
-                    Logout
-                  </Button>
+                    <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
+                      <AccountCircleIcon />
+                    </Avatar>
+                  </IconButton>
                 ) : (
-                  <Button
+                  <IconButton
                     component={Link}
                     to="/login"
                     color="inherit"
-                    size="small"
                     sx={{
-                      textTransform: 'none',
-                      fontWeight: 600,
                       '&:hover': {
                         color: (theme.palette.accent && theme.palette.accent.main) || 'gold',
                       },
                     }}
                   >
-                    Login
-                  </Button>
+                    <LoginIcon />
+                  </IconButton>
                 )}
 
                 <Button
@@ -266,18 +287,47 @@ const Navbar = () => {
             {/* Add login/logout in mobile menu */}
             <ListItem disablePadding>
               {isAuthenticated ? (
-                <ListItemButton onClick={() => {
-                  handleLogout();
-                  handleDrawerToggle();
-                }}>
-                  <ListItemText primary="Logout" />
-                </ListItemButton>
+                <>
+                  <ListItem>
+                    <Box sx={{ width: '100%', py: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Avatar sx={{ mr: 2, bgcolor: 'secondary.main' }}>
+                          <AccountCircleIcon />
+                        </Avatar>
+                        <Typography variant="subtitle1" fontWeight={600}>
+                          Profile
+                        </Typography>
+                      </Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Signed in as
+                      </Typography>
+                      <Typography variant="body1" color="primary.main" sx={{ 
+                        wordBreak: 'break-all',
+                        fontWeight: 500
+                      }}>
+                        {user?.email || 'User'}
+                      </Typography>
+                    </Box>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton 
+                      onClick={() => {
+                        handleLogoutClick();
+                        handleDrawerToggle();
+                      }}
+                      sx={{ color: 'error.main' }}
+                    >
+                      <ListItemText primary="Logout" />
+                    </ListItemButton>
+                  </ListItem>
+                </>
               ) : (
                 <ListItemButton
                   component={Link}
                   to="/login"
                   onClick={handleDrawerToggle}
                 >
+                  <LoginIcon sx={{ mr: 2 }} />
                   <ListItemText primary="Login" />
                 </ListItemButton>
               )}
@@ -294,6 +344,60 @@ const Navbar = () => {
           </Box>
         </Box>
       </Drawer>
+
+      {/* Profile Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleProfileMenuClose}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <Box sx={{ px: 2, py: 1, minWidth: 250 }}>
+          <Typography variant="subtitle1" fontWeight={600}>
+            Profile
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ 
+            wordBreak: 'break-all',
+            mt: 0.5
+          }}>
+            Signed in as
+          </Typography>
+          <Typography variant="body1" sx={{ 
+            wordBreak: 'break-all',
+            color: 'primary.main',
+            fontWeight: 500
+          }}>
+            {user?.email || 'User'}
+          </Typography>
+        </Box>
+        <MenuItem onClick={handleLogoutClick} sx={{ color: 'error.main' }}>
+          <ListItemText primary="Logout" />
+        </MenuItem>
+      </Menu>
+
+      {/* Logout Confirmation Dialog */}
+      <Dialog
+        open={logoutDialogOpen}
+        onClose={handleLogoutCancel}
+        aria-labelledby="logout-dialog-title"
+      >
+        <DialogTitle id="logout-dialog-title">
+          Confirm Logout
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to log out?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleLogoutCancel}>Cancel</Button>
+          <Button onClick={handleLogoutConfirm} color="primary" variant="contained">
+            Logout
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* 🔹 Mount Disclaimer Portal once at the end of Navbar */}
       <DisclaimerPortal ref={disclaimerRef} />
     </>
