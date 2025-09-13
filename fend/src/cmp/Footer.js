@@ -7,9 +7,9 @@ import {
   Link, 
   IconButton, 
   Button,
-  useTheme,
-  useMediaQuery 
+  useTheme
 } from '@mui/material';
+import { isMobile, isTablet } from 'react-device-detect';
 import { 
   Email, 
   LocationOn, 
@@ -33,9 +33,7 @@ const makePhoneCall = () => {
 
 export default function Footer() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-
+  
   const contactBoxSx = {
     p: { xs: 2, sm: 3 },
     backgroundColor: theme.palette.custom.lightWhite.main,

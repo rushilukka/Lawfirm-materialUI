@@ -13,7 +13,6 @@ import {
   ListItem,
   ListItemText,
   ListItemButton,
-  useMediaQuery,
   useTheme,
   Avatar,
   Menu,
@@ -23,6 +22,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
+import { isMobile } from 'react-device-detect';
 import { useAuth } from '../context/AuthContext';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -38,7 +38,6 @@ const Navbar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { isAuthenticated, logout, user } = useAuth();
-  const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const disclaimerRef = React.useRef();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -108,7 +107,7 @@ const Navbar = () => {
               <img
                 src={logo}
                 alt="Vidhigna Law Firm"
-                style={{ height: isMdDown ? 36 : 44, width: 'auto' }}
+                style={{ height: isMobile ? 36 : 44, width: 'auto' }}
               />
               <Typography
                 variant="h6"
@@ -125,7 +124,7 @@ const Navbar = () => {
             <Box sx={{ flexGrow: 1 }} />
 
             {/* Desktop Nav */}
-            {!isMdDown && (
+            {!isMobile && (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 {navLinks.map((link) => (
                   <Button
@@ -215,7 +214,7 @@ const Navbar = () => {
             )}
 
             {/* Mobile menu button */}
-            {isMdDown && (
+            {isMobile && (
               <IconButton
                 color="inherit"
                 aria-label="open navigation"
@@ -237,7 +236,7 @@ const Navbar = () => {
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
         sx={{
-          display: { xs: 'block', md: 'none' },
+          display: isMobile ? 'block' : 'none',
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280 },
         }}
       >

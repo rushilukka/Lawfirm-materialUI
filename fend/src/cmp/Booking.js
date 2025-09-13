@@ -15,7 +15,6 @@ import {
   Box,
   Paper,
   useTheme,
-  useMediaQuery,
   Alert,
   Snackbar,
   Grid,
