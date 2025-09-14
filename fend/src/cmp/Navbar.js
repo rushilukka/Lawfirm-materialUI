@@ -78,16 +78,15 @@ const Navbar = () => {
         color="primary"
         elevation={2}
         sx={{
-          // small vertical padding to keep it slim
-          py: 0.5,
+          py: { xs: 1, sm: 0.5 }, // Increased padding for mobile
         }}
       >
-        <Container maxWidth="xl" sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
+        <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 2, md: 3 } }}>
           <Toolbar
             disableGutters
             variant="dense"
             sx={{
-              minHeight: { xs: 48, sm: 56, md: 60 }, // more compact on mobile
+              minHeight: { xs: 56, sm: 56, md: 60 }, // Increased height for mobile
               display: 'flex',
               alignItems: 'center',
               gap: { xs: 1, sm: 1.5 },
@@ -109,15 +108,16 @@ const Navbar = () => {
               <img
                 src={logo}
                 alt="Davda Associates"
-                style={{ height: isMobile ? 36 : 44, width: 'auto' }}
+                style={{ height: isMobile ? 40 : 44, width: 'auto' }}
               />
               <Typography
                 variant="h6"
                 sx={{
-                  ml: { xs: 0.5, sm: 1 },
+                  ml: { xs: 1, sm: 1 },
                   fontWeight: 700,
-                  display: { xs: 'none', sm: 'block' },
+                  display: 'block', // Show on all devices
                   fontSize: {
+                    xs: '1rem',
                     sm: '1.1rem',
                     md: '1.25rem',
                   },
