@@ -4,8 +4,8 @@ import { Box, Button, TextField, Typography, Paper, CircularProgress } from '@mu
 import Popup  from './Popup-DispMsg';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-    const { sendOtp, loginWithOtp } = useAuth();
+const VerifyEmail = () => {
+    const { sendOtp, verifyEmailWithOtp } = useAuth();
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [otpSent, setOtpSent] = useState(false);
@@ -43,7 +43,7 @@ const Login = () => {
         setLoading(true);
         setError('');
         try {
-            await loginWithOtp(email, otp);
+            await verifyEmailWithOtp(email, otp);
             setSuccess('Logged in successfully!');
             setTimeout(() => {
                 navigate('/');
@@ -56,18 +56,52 @@ const Login = () => {
     };
 
     return (
+        <>
+        <Typography 
+                    variant="body2" 
+                    align="center"
+                    sx={{ 
+                        mb: 2,
+                        color: '#666',
+                        backgroundColor: '#f8f9fa',
+                        padding: 1.5,
+                        borderRadius: 1,
+                        border: '1px solid #e0e0e0'
+                    }}
+                >
+                    Note: This email verification is only for booking purposes.  
+                </Typography>
         <Box
             sx={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                minHeight: '100vh',
-                padding: 2
+                minHeight: '50vh',
+                padding: 2,
             }}
         >
-            <Paper elevation={3} sx={{ padding: 4, maxWidth: 400, width: '100%' }}>
-                <Typography variant="h5" component="h1" gutterBottom align="center">
-                    Login
+            <Paper 
+                elevation={3} 
+                sx={{ 
+                    padding: 3, 
+                    maxWidth: 400, 
+                    width: '100%',
+                    borderRadius: 2,
+                    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, 0.1)'
+                }}
+            > 
+                <Typography 
+                    variant="h5" 
+                    component="h1" 
+                    gutterBottom 
+                    align="center"
+                    sx={{ 
+                        mb: 2,
+                        color: '#2c3e50',
+                        fontWeight: 500
+                    }}
+                >
+                    Verify Email
                 </Typography>
                 
                 <form onSubmit={otpSent ? handleVerifyOtp : handleSendOtp}>
@@ -77,10 +111,16 @@ const Login = () => {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        margin="normal"
+                        margin="dense"
                         disabled={otpSent}
                         placeholder="Enter your email address"
                         required
+                        sx={{
+                            mb: 1,
+                            '& .MuiOutlinedInput-root': {
+                                borderRadius: 1
+                            }
+                        }}
                     />
 
                     {otpSent && (
@@ -89,8 +129,14 @@ const Login = () => {
                             label="Enter OTP"
                             value={otp}
                             onChange={(e) => setOtp(e.target.value)}
-                            margin="normal"
+                            margin="dense"
                             required
+                            sx={{
+                                mb: 1,
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: 1
+                                }
+                            }}
                         />
                     )}
 
@@ -99,7 +145,14 @@ const Login = () => {
                         variant="contained"
                         color="primary"
                         type="submit"
-                        sx={{ mt: 3 }}
+                        sx={{ 
+                            mt: 2,
+                            mb: 1,
+                            py: 1,
+                            borderRadius: 1,
+                            textTransform: 'none',
+                            fontSize: '1rem'
+                        }}
                         disabled={loading}
                     >
                         {loading ? (
@@ -116,7 +169,8 @@ const Login = () => {
                 {success && <Popup message={success} variant="success" />}
             </Paper>
         </Box>
+        </>
     );
 };
 
-export default Login;
+export default VerifyEmail;

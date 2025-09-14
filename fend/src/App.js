@@ -10,7 +10,7 @@ import Navbar from './cmp/Navbar';
 import theme from './Theme/theme';
 import Footer from './cmp/Footer';
 import BookingDetails from './cmp/BookingDetails/Booking-Details';
-import Login from './cmp/Login';
+import VerifyEmail from './cmp/VerifyEmail';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './cmp/PrivateRoute';
 function App() {
@@ -23,7 +23,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/verifyEmail" element={<VerifyEmail />} />
             <Route
               path="/book-slot"
               element={

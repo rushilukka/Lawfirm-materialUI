@@ -164,7 +164,7 @@ const Navbar = () => {
                 ) : (
                   <IconButton
                     component={Link}
-                    to="/login"
+                    to="/verifyEmail"
                     color="inherit"
                     sx={{
                       '&:hover': {
@@ -323,11 +323,11 @@ const Navbar = () => {
               ) : (
                 <ListItemButton
                   component={Link}
-                  to="/login"
+                  to="/verifyEmail"
                   onClick={handleDrawerToggle}
                 >
                   <LoginIcon sx={{ mr: 2 }} />
-                  <ListItemText primary="Login" />
+                  <ListItemText primary="Verify Email" />
                 </ListItemButton>
               )}
             </ListItem>
