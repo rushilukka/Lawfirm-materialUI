@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; 
 import {
   AppBar,
   Toolbar,
@@ -81,15 +81,15 @@ const Navbar = () => {
           py: 0.5,
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
           <Toolbar
             disableGutters
             variant="dense"
             sx={{
-              minHeight: { xs: 56, sm: 60 }, // compact height
+              minHeight: { xs: 48, sm: 56, md: 60 }, // more compact on mobile
               display: 'flex',
               alignItems: 'center',
-              gap: 1.5,
+              gap: { xs: 1, sm: 1.5 },
             }}
           >
             {/* Brand */}
@@ -101,7 +101,8 @@ const Navbar = () => {
                 alignItems: 'center',
                 textDecoration: 'none',
                 color: 'inherit',
-                mr: 1,
+                mr: { xs: 0.5, sm: 1 },
+                flexShrink: 0
               }}
             >
               <img
@@ -112,9 +113,13 @@ const Navbar = () => {
               <Typography
                 variant="h6"
                 sx={{
-                  ml: 1,
+                  ml: { xs: 0.5, sm: 1 },
                   fontWeight: 700,
                   display: { xs: 'none', sm: 'block' },
+                  fontSize: {
+                    sm: '1.1rem',
+                    md: '1.25rem',
+                  },
                 }}
               >
                 Vidhigna Law Firm
@@ -125,7 +130,15 @@ const Navbar = () => {
 
             {/* Desktop Nav */}
             {!isMobile && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: { xs: 0.25, sm: 0.5 },
+                '& .MuiButton-root': {
+                  px: { xs: 0.5, sm: 1 },
+                  minWidth: { xs: 'auto', sm: '64px' }
+                }
+              }}>
                 {navLinks.map((link) => (
                   <Button
                     key={link.text}
@@ -157,8 +170,12 @@ const Navbar = () => {
                       },
                     }}
                   >
-                    <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
-                      <AccountCircleIcon />
+                    <Avatar sx={{ 
+                      width: { xs: 28, sm: 32 }, 
+                      height: { xs: 28, sm: 32 }, 
+                      bgcolor: 'secondary.main' 
+                    }}>
+                      <AccountCircleIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />
                     </Avatar>
                   </IconButton>
                 ) : (
@@ -172,7 +189,7 @@ const Navbar = () => {
                       },
                     }}
                   >
-                    <LoginIcon />
+                    <LoginIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />
                   </IconButton>
                 )}
 
@@ -201,7 +218,7 @@ const Navbar = () => {
                   aria-label="Call"
                   sx={{ ml: 0.5 }}
                 >
-                  <CallIcon />
+                  <CallIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />
                 </IconButton>
                 <IconButton
                   color="inherit"
@@ -251,7 +268,17 @@ const Navbar = () => {
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <img src={logo} alt="Logo" style={{ height: 32 }} />
-              <Typography variant="subtitle1" fontWeight={700}>
+              <Typography 
+                variant="subtitle1" 
+                fontWeight={700}
+                sx={{
+                  fontSize: {
+                    xs: '1rem',
+                    sm: '1.1rem',
+                    md: '1.25rem',
+                  }
+                }}
+              >
                 Vidhigna Law Firm
               </Typography>
             </Box>
