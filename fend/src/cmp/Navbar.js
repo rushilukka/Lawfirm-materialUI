@@ -114,7 +114,7 @@ const Navbar = () => {
                 variant="h6"
                 sx={{
                   ml: { xs: 1, sm: 1 },
-                  fontWeight: 700,
+                  fontWeight: 500,
                   display: 'block', // Show on all devices
                   fontSize: {
                     xs: '1rem',
@@ -149,7 +149,7 @@ const Navbar = () => {
                     size="small"
                     sx={{
                       textTransform: 'none',
-                      fontWeight: 600,
+                      fontWeight: 500,
                       bgcolor: location.pathname === link.path ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
                       '&:hover': {
                         color: (theme.palette.accent && theme.palette.accent.main) || 'gold',
@@ -206,7 +206,7 @@ const Navbar = () => {
                     bgcolor: 'gold',
                     color: 'black',
                     textTransform: 'none',
-                    fontWeight: 700,
+                    fontWeight: 500,
                     '&:hover': {
                       bgcolor: (theme.palette.accent && theme.palette.accent.main) || 'gold',
                     },
@@ -274,7 +274,9 @@ const Navbar = () => {
               <img src={logo} alt="Logo" style={{ height: 32 }} />
               <Typography 
                 variant="subtitle1" 
-                fontWeight={700}
+                style={{
+                  fontWeight: 500
+                }}
                 sx={{
                   fontSize: {
                     xs: '1rem',
@@ -332,7 +334,9 @@ const Navbar = () => {
                         <Avatar sx={{ mr: 2, bgcolor: 'secondary.main' }}>
                           <AccountCircleIcon />
                         </Avatar>
-                        <Typography variant="subtitle1" fontWeight={600}>
+                        <Typography variant="subtitle1"         style={{
+                          fontWeight: 500
+                        }}>
                           Profile
                         </Typography>
                       </Box>
@@ -392,7 +396,10 @@ const Navbar = () => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <Box sx={{ px: 2, py: 1, minWidth: 250 }}>
-          <Typography variant="subtitle1" fontWeight={600}>
+          <Typography variant="subtitle1"                 style={{
+            fontWeight: 500
+          }}
+          >
             Profile
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ 

@@ -60,7 +60,7 @@ let theme = createTheme({
     fontSizeCalc: 'calc(10px + 2vmin)',
     h1: {
       fontFamily: "'Merriweather', serif",
-      fontWeight: 700,
+      fontWeight: 500,
       fontSize: {
         xs: '1.75rem',  // mobile
         sm: '2rem',     // small tablet
@@ -71,7 +71,7 @@ let theme = createTheme({
     },
     h2: {
       fontFamily: "'Merriweather', serif",
-      fontWeight: 700,
+      fontWeight: 500,
       fontSize: {
         xs: '1.5rem',
         sm: '1.625rem',
@@ -82,7 +82,7 @@ let theme = createTheme({
     },
     h3: {
       fontFamily: "'Merriweather', serif",
-      fontWeight: 600,
+      fontWeight: 500,
       fontSize: {
         xs: '1.25rem',
         sm: '1.375rem',
