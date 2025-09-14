@@ -38,11 +38,11 @@ class BookingService {
     const mailOptions = {
       from: 'rushi.lukka.315@gmail.com',
       to: bookingData.email,
-      subject: 'Booking Confirmation - Vidhigna Law Firm',
+      subject: 'Booking Confirmation - Davda Associates',
       html: `
         <p>Dear ${bookingData.name},</p>
         
-        <p>Thank you for choosing <strong>Vidhigna Law Firm</strong> for your legal services.</p>
+        <p>Thank you for choosing <strong>Davda Associates</strong> for your legal services.</p>
         
         <p>We are pleased to confirm your booking. Below are the details of your appointment:</p>
         <ul>
@@ -62,7 +62,7 @@ class BookingService {
         <p>We look forward to assisting you with your legal needs.</p>
         
         <p>Best regards,<br>
-        <strong>Vidhigna Law Firm</strong></p>
+        <strong>Davda Associates</strong></p>
       `,
     };
 

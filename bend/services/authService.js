@@ -34,16 +34,16 @@ class AuthService {
             await this.transporter.sendMail({
                 from: 'rushi.lukka.315@gmail.com',
                 to: email,
-                subject: 'Your OTP for Vidhigna Law Firm Authentication',
+                subject: 'Your OTP for Davda Associates Authentication',
                 html: `
-                    <h2>Welcome to Vidhigna Law Firm</h2>
+                    <h2>Welcome to Davda Associates</h2>
                     <p>Your One Time Password (OTP) for authentication is:</p>
                     <h1 style="color: #4CAF50;">${otp}</h1>
                     <p>This OTP will expire in 5 minutes.</p>
                     <p>If you didn't request this OTP, please ignore this email.</p>
                     <br>
                     <p>Best regards,</p>
-                    <p>Vidhigna Law Firm Team</p>
+                    <p>Davda Associates Team</p>
                 `
             });
 

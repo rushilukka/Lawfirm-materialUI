@@ -203,7 +203,7 @@ export default function Footer() {
               opacity: 0.8
             }}
           >
-            © {new Date().getFullYear()} Vidhigna Law Firm. All rights reserved.
+            © {new Date().getFullYear()} Davda Associates. All rights reserved.
           </Typography>
           
           <Box sx={{ display: 'flex', gap: 2 }}>

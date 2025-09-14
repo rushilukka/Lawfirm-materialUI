@@ -108,7 +108,7 @@ const Navbar = () => {
             >
               <img
                 src={logo}
-                alt="Vidhigna Law Firm"
+                alt="Davda Associates"
                 style={{ height: isMobile ? 36 : 44, width: 'auto' }}
               />
               <Typography
@@ -123,7 +123,7 @@ const Navbar = () => {
                   },
                 }}
               >
-                Vidhigna Law Firm
+                Davda Associates
               </Typography>
             </Box>
 
@@ -283,7 +283,7 @@ const Navbar = () => {
                   }
                 }}
               >
-                Vidhigna Law Firm
+                Davda Associates
               </Typography>
             </Box>
             <IconButton onClick={handleDrawerToggle}>
