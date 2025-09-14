@@ -31,7 +31,7 @@ import CallIcon from '@mui/icons-material/Call';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
 
-import logo from '../img/logo-adv1.png';
+import logo from '../img/logo_circle.png';
 import DisclaimerPortal from './Popup-Disclaimer';
 
 const Navbar = () => {
