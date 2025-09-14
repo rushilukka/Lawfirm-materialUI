@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import {
   AppBar,
   Toolbar,
@@ -37,6 +37,7 @@ import DisclaimerPortal from './Popup-Disclaimer';
 const Navbar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated, logout, user } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const disclaimerRef = React.useRef();
@@ -149,11 +150,14 @@ const Navbar = () => {
                     sx={{
                       textTransform: 'none',
                       fontWeight: 600,
+                      bgcolor: location.pathname === link.path ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
                       '&:hover': {
                         color: (theme.palette.accent && theme.palette.accent.main) || 'gold',
                         transform: 'translateY(-1px)',
+                        bgcolor: location.pathname === link.path ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.05)',
                       },
                       transition: 'all .15s ease',
+                      borderRadius: '4px',
                     }}
                   >
                     {link.text}
@@ -294,10 +298,18 @@ const Navbar = () => {
                   component={Link}
                   to={link.path}
                   onClick={handleDrawerToggle}
+                  selected={location.pathname === link.path}
                   sx={{
                     '&:hover': {
                       bgcolor: (theme.palette.accent && theme.palette.accent.main) || 'rgba(0,0,0,0.08)',
                       color: 'black',
+                    },
+                    '&.Mui-selected': {
+                      bgcolor: 'primary.main',
+                      color: 'white',
+                      '&:hover': {
+                        bgcolor: 'primary.dark',
+                      },
                     },
                   }}
                 >
