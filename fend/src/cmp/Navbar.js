@@ -33,6 +33,7 @@ import LoginIcon from '@mui/icons-material/Login';
 
 import logo from '../img/logo_circle.png';
 import DisclaimerPortal from './Popup-Disclaimer';
+import { PHONE_NUMBER, EMAIL_ID } from '../constants/constants';
 
 const Navbar = () => {
   const theme = useTheme();
@@ -377,10 +378,10 @@ const Navbar = () => {
           </List>
 
           <Box sx={{ display: 'flex', gap: 1.5, mt: 2, px: 1 }}>
-            <Button startIcon={<CallIcon />} href="tel:+919428669847">
+            <Button startIcon={<CallIcon />} href={`tel:+91${PHONE_NUMBER}`}>
               Call
             </Button>
-            <Button startIcon={<EmailIcon />} href="mailto:info@lawfirm.com">
+            <Button startIcon={<EmailIcon />} href={`mailto:${EMAIL_ID}`}>
               Email
             </Button>
           </Box>

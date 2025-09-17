@@ -35,10 +35,10 @@ const Booking = () => {
   const [dispMsg, setDispMsg] = useState("No Notification");
   const [bookedSlot, setBookedSlot] = useState([]);
   const [slotDetails, setslotDetails] = useState([
-    { value: "6:00-6:45", disabled: true },
-    { value: "7:00-7:45", disabled: true },
-    { value: "8:00-8:45", disabled: true },
-    { value: "9:00-9:45", disabled: true },
+    { value: "6:00-6:45 pm", disabled: true },
+    { value: "7:00-7:45 pm", disabled: true },
+    { value: "8:00-8:45 pm", disabled: true },
+    { value: "9:00-9:45 pm", disabled: true },
   ]);
 
   const [formData, setFormData] = useState({

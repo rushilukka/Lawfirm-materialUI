@@ -30,20 +30,20 @@ class BookingService {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
-        user: 'Rushi.lukka.315',
-        pass: 'gofmpfbvzldxhosc',
+        user: process.env.EMAIL_AUTH_USER,
+        pass: process.env.EMAIL_AUTH_PASS,
       },
     });
 
     const mailOptions = {
-      from: 'rushi.lukka.315@gmail.com',
+      from: process.env.EMAIL_ID,
       to: bookingData.email,
-      subject: 'Booking Confirmation - Davda Associates',
+      subject: `Booking Confirmation - ${process.env.APP_NAME}`,
       html: `
         <p>Dear ${bookingData.name},</p>
-        
-        <p>Thank you for choosing <strong>Davda Associates</strong> for your legal services.</p>
-        
+
+        <p>Thank you for choosing <strong>${process.env.APP_NAME}</strong> for your legal services.</p>
+
         <p>We are pleased to confirm your booking. Below are the details of your appointment:</p>
         <ul>
           <li><strong>Service Type:</strong> ${newBooking.serviceType}</li>
@@ -55,14 +55,14 @@ class BookingService {
         
         <p>If you have any further questions or need assistance, feel free to contact us:</p>
         <ul>
-          <li>Phone: <a href="tel:+9428669848">9428669848</a></li>
-          <li>Email: <a href="mailto:rushi.lukka.315@gmail.com">rushi.lukka.315@gmail.com</a></li>
+          <li>Phone: <a href="tel:+${process.env.PHONE_NUMBER}">${process.env.PHONE_NUMBER}</a></li>
+          <li>Email: <a href="mailto:${process.env.EMAIL_ID}">${process.env.EMAIL_ID}</a></li>
         </ul>
         
         <p>We look forward to assisting you with your legal needs.</p>
         
         <p>Best regards,<br>
-        <strong>Davda Associates</strong></p>
+        <strong>${process.env.APP_NAME}</strong></p>
       `,
     };
 

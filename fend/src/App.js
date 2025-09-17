@@ -17,8 +17,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        <Router basename={process.env.PUBLIC_URL}>
-          <Navbar />
+        <Router>
+          <Navbar/>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutUs />} />
