@@ -12,10 +12,10 @@ export default function About() {
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={8}>
               <Typography variant="h3" gutterBottom>
-                Welcome to Vidhigna Law Firm
+                Welcome to Davda Associates
               </Typography>
               <Typography variant="body1" paragraph>
-                At Vidhigna Law Firm, we pride ourselves on delivering exceptional legal
+                At Davda Associates, we pride ourselves on delivering exceptional legal
                 solutions tailored to meet your unique needs. With a commitment to
                 excellence and a track record of success spanning over two decades, we
                 have established ourselves as trusted legal advisors in India.

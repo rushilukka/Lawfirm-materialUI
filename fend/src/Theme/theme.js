@@ -6,11 +6,11 @@ import '@fontsource/merriweather';
 let theme = createTheme({
   breakpoints: {
     values: {
-      xs: 0,
-      sm: 600,
-      md: 900,
-      lg: 1200,
-      xl: 1536,
+      xs: 0,      // Mobile phones
+      sm: 480,    // Large phones/Small tablets
+      md: 768,    // Tablets
+      lg: 1024,   // Laptops/Desktops
+      xl: 1280,   // Large screens
     },
   },
   palette: {
@@ -60,31 +60,34 @@ let theme = createTheme({
     fontSizeCalc: 'calc(10px + 2vmin)',
     h1: {
       fontFamily: "'Merriweather', serif",
-      fontWeight: 700,
+      fontWeight: 500,
       fontSize: {
-        xs: '2rem',    // mobile
-        sm: '2.25rem', // tablet
-        md: '2.5rem',  // desktop
+        xs: '1.75rem',  // mobile
+        sm: '2rem',     // small tablet
+        md: '2.25rem',  // tablet
+        lg: '2.5rem',   // desktop
       },
       lineHeight: 1.2,
     },
     h2: {
       fontFamily: "'Merriweather', serif",
-      fontWeight: 700,
+      fontWeight: 500,
       fontSize: {
-        xs: '1.75rem',
-        sm: '1.875rem',
-        md: '2rem',
+        xs: '1.5rem',
+        sm: '1.625rem',
+        md: '1.75rem',
+        lg: '2rem',
       },
       lineHeight: 1.3,
     },
     h3: {
       fontFamily: "'Merriweather', serif",
-      fontWeight: 600,
+      fontWeight: 500,
       fontSize: {
-        xs: '1.5rem',
-        sm: '1.625rem',
-        md: '1.75rem',
+        xs: '1.25rem',
+        sm: '1.375rem',
+        md: '1.5rem',
+        lg: '1.75rem',
       },
     },
     body1: {
@@ -93,15 +96,17 @@ let theme = createTheme({
         xs: '0.875rem',
         sm: '0.9375rem',
         md: '1rem',
+        lg: '1rem',
       },
       lineHeight: 1.6,
     },
     body2: {
       fontFamily: "'Roboto', sans-serif",
       fontSize: {
-        xs: '0.8125rem',
-        sm: '0.875rem',
-        md: '0.9375rem',
+        xs: '0.75rem',
+        sm: '0.8125rem',
+        md: '0.875rem',
+        lg: '0.9375rem',
       },
       lineHeight: 1.5,
     },
@@ -121,14 +126,22 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           paddingLeft: {
-            xs: '1rem',
-            sm: '1.5rem',
-            md: '2rem',
+            xs: '0.75rem',  // Smaller padding for mobile
+            sm: '1rem',
+            md: '1.5rem',
+            lg: '2rem',
           },
           paddingRight: {
-            xs: '1rem',
-            sm: '1.5rem',
-            md: '2rem',
+            xs: '0.75rem',  // Smaller padding for mobile
+            sm: '1rem',
+            md: '1.5rem',
+            lg: '2rem',
+          },
+          maxWidth: {
+            xs: '100%',
+            sm: '100%',
+            md: '90%',
+            lg: '1200px',
           },
         },
       },
@@ -137,9 +150,44 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: '4px',
-          padding: '0.5rem 1rem',
-          '@media (max-width:600px)': {
-            padding: '0.4rem 0.8rem',
+          padding: {
+            xs: '0.35rem 0.7rem',  // Smaller padding for mobile
+            sm: '0.4rem 0.8rem',
+            md: '0.5rem 1rem',
+          },
+          fontSize: {
+            xs: '0.875rem',
+            sm: '0.9375rem',
+            md: '1rem',
+          },
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          padding: {
+            xs: '0.5rem',  // Smaller padding for mobile icons
+            sm: '0.625rem',
+            md: '0.75rem',
+          },
+          '& .MuiSvgIcon-root': {
+            fontSize: {
+              xs: '1.25rem',  // Smaller icons for mobile
+              sm: '1.5rem',
+              md: '1.75rem',
+            },
+          },
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          margin: {
+            xs: '0.5rem',
+            sm: '0.75rem',
+            md: '1rem',
           },
         },
       },

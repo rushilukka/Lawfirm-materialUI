@@ -149,7 +149,7 @@ const DisclaimerPortal = forwardRef((_, ref) => {
           sx={{
             backgroundColor: theme.palette.custom.white.main,
             color: theme.palette.primary.main,
-            fontWeight: 600,
+            fontWeight: 500,
             px: 4,
             "&:hover": {
               backgroundColor: theme.palette.custom.white.main,

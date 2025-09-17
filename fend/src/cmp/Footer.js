@@ -7,9 +7,9 @@ import {
   Link, 
   IconButton, 
   Button,
-  useTheme,
-  useMediaQuery 
+  useTheme
 } from '@mui/material';
+import { isMobile, isTablet } from 'react-device-detect';
 import { 
   Email, 
   LocationOn, 
@@ -33,27 +33,28 @@ const makePhoneCall = () => {
 
 export default function Footer() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-
+  
   const contactBoxSx = {
-    p: { xs: 2, sm: 3 },
+    p: { xs: 1, sm: 3 },
     backgroundColor: theme.palette.custom.lightWhite.main,
     borderRadius: 1,
     height: '100%',
     transition: 'transform 0.3s ease-in-out',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     '&:hover': {
-      transform: 'translateY(-5px)',
+      transform: isMobile ? 'none' : 'translateY(-5px)',
       backgroundColor: theme.palette.custom.lighterWhite.main,
     }
   };
 
   const iconSx = {
-    fontSize: { xs: 30, sm: 35, md: 40 },
+    fontSize: { xs: 24, sm: 35, md: 40 },
     color: 'primary.main',
     transition: 'transform 0.2s ease-in-out',
     '&:hover': {
-      transform: 'scale(1.1)',
+      transform: isMobile ? 'none' : 'scale(1.1)',
     }
   };
 
@@ -69,26 +70,25 @@ export default function Footer() {
       }}
     >
       <Container maxWidth="lg">
-        <Grid container spacing={{ xs: 2, sm: 3, md: 5 }}>
+        <Grid container spacing={{ xs: 1, sm: 3, md: 5 }}>
           {/* Office Section */}
           <Grid item xs={12} sm={6} md={4}>
             <Box
               display="flex"
-              flexDirection={isMobile ? 'column' : 'row'}
-              alignItems={isMobile ? 'flex-start' : 'center'}
+              flexDirection="row"
+              alignItems="center"
               sx={contactBoxSx}
             >
               <LocationOn sx={iconSx} />
               <Box 
-                ml={isMobile ? 0 : 3} 
-                mt={isMobile ? 2 : 0}
-                sx={{ textAlign: isMobile ? 'center' : 'left', width: '100%' }}
+                ml={1.5}
+                sx={{ textAlign: 'left', width: '100%' }}
               >
                 <Typography 
                   variant="h6" 
                   sx={{ 
-                    fontSize: { xs: '1.1rem', sm: '1.2rem', md: '1.25rem' },
-                    mb: 1 
+                    fontSize: { xs: '0.9rem', sm: '1.2rem', md: '1.25rem' },
+                    mb: { xs: 0.5, sm: 1 }
                   }}
                 >
                   Our Office
@@ -104,20 +104,19 @@ export default function Footer() {
           <Grid item xs={12} sm={6} md={4}>
             <Box
               display="flex"
-              flexDirection={isMobile ? 'column' : 'row'}
-              alignItems={isMobile ? 'flex-start' : 'center'}
+              flexDirection="row"
+              alignItems="center"
               sx={contactBoxSx}
             >
               <IconButton 
                 onClick={handleOpenGmail}
-                sx={{ p: { xs: 1, sm: 1.5 } }}
+                sx={{ p: { xs: 0.5, sm: 1.5 } }}
               >
                 <Email sx={iconSx} />
               </IconButton>
               <Box 
-                ml={isMobile ? 0 : 3}
-                mt={isMobile ? 2 : 0}
-                sx={{ textAlign: isMobile ? 'center' : 'left', width: '100%' }}
+                ml={1.5}
+                sx={{ textAlign: 'left', width: '100%' }}
               >
                 <Typography 
                   variant="h6"
@@ -146,20 +145,19 @@ export default function Footer() {
           <Grid item xs={12} sm={6} md={4}>
             <Box
               display="flex"
-              flexDirection={isMobile ? 'column' : 'row'}
-              alignItems={isMobile ? 'flex-start' : 'center'}
+              flexDirection="row"
+              alignItems="center"
               sx={contactBoxSx}
             >
               <IconButton 
                 onClick={makePhoneCall}
-                sx={{ p: { xs: 1, sm: 1.5 } }}
+                sx={{ p: { xs: 0.5, sm: 1.5 } }}
               >
                 <Phone sx={iconSx} />
               </IconButton>
               <Box 
-                ml={isMobile ? 0 : 3}
-                mt={isMobile ? 2 : 0}
-                sx={{ textAlign: isMobile ? 'center' : 'left', width: '100%' }}
+                ml={1.5}
+                sx={{ textAlign: 'left', width: '100%' }}
               >
                 <Typography 
                   variant="h6"
@@ -205,7 +203,7 @@ export default function Footer() {
               opacity: 0.8
             }}
           >
-            © {new Date().getFullYear()} Vidhigna Law Firm. All rights reserved.
+            © {new Date().getFullYear()} Davda Associates. All rights reserved.
           </Typography>
           
           <Box sx={{ display: 'flex', gap: 2 }}>

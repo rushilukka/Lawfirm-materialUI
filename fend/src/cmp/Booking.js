@@ -15,12 +15,13 @@ import {
   Box,
   Paper,
   useTheme,
-  useMediaQuery,
   Alert,
   Snackbar,
   Grid,
   CircularProgress
 } from '@mui/material';
+import { API_BASE_URL, BOOKING_SERVICE } from '../constants/constants';
+import AuthService from '../services/AuthService';
 
 const Booking = () => {
   const theme = useTheme();
@@ -42,7 +43,6 @@ const Booking = () => {
 
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
     phone: '',
     date: null,
     slot: '',
@@ -55,7 +55,6 @@ const Booking = () => {
   // Form validation states
   const [errors, setErrors] = useState({
     name: '',
-    email: '',
     phone: '',
     pincode: ''
   });
@@ -96,10 +95,6 @@ const Booking = () => {
 
   const validateField = (name, value) => {
     switch (name) {
-      case 'email':
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) 
-          ? '' 
-          : 'Please enter a valid email address';
       case 'phone':
         return /^\d{10}$/.test(value) 
           ? '' 
@@ -191,7 +186,6 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
     // Validate all fields
     const validationErrors = {
       name: validateField('name', formData.name),
-      email: validateField('email', formData.email),
       phone: validateField('phone', formData.phone),
       pincode: validateField('pincode', formData.pincode)
     };
@@ -231,16 +225,29 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
     setIsLoading(true);
 
     try {
-      // Format date for submission
+      // Get email from JWT token
+      const userToken = AuthService.getToken();
+      const tokenData = userToken ? JSON.parse(atob(userToken.split('.')[1])) : null;
+      
+      if (!userToken || !tokenData || !tokenData.email) {
+        throw new Error('Please login to book an appointment');
+      }
+
+      // Format date for submission and include email from token
       const formattedData = {
         ...formData,
-        date: filterDate(formData.date)
+        date: filterDate(formData.date),
+        email: tokenData.email.includes('@') ? tokenData.email : ''
       };
 
-      const response = await fetch("http://localhost:5000/booking", {
+
+      // Attach JWT token to booking API call
+      const apiToken = localStorage.getItem('authToken');
+      const response = await fetch(API_BASE_URL + BOOKING_SERVICE.CREATE_BOOKING, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(apiToken ? { 'Authorization': `Bearer ${apiToken}` } : {})
         },
         body: JSON.stringify(formattedData),
       });
@@ -254,7 +261,6 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
       // Reset form on success
       setFormData({
         name: '',
-        email: '',
         phone: '',
         date: null,
         slot: '',
@@ -290,9 +296,8 @@ const formattedDate1 = formattedDate.toISOString().split("T")[0]; // Get 'YYYY-M
  
 const GetAvailableSlot = async (newDate) => {
   try{
-    
-    //  const response = await fetch('http://localhost:5000/deleteEnteries',{
-    const response = await fetch('http://localhost:5000/getAvailableSlot-Me-2',{
+
+    const response = await fetch(API_BASE_URL + BOOKING_SERVICE.GET_AVAILABLE_SLOTS, {
        method:'POST',
        headers: {
          "Content-Type": "application/json",
@@ -398,7 +403,7 @@ const GetAvailableSlot = async (newDate) => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   label="Name"
                   name="name"
@@ -409,19 +414,6 @@ const GetAvailableSlot = async (newDate) => {
                   error={!!errors.name}
                   helperText={errors.name}
                   sx={{ mb: { xs: 2, sm: 0 } }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  type="email"
-                  required
-                  fullWidth
-                  error={!!errors.email}
-                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

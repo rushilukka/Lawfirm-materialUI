@@ -2,58 +2,43 @@ import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import { Snackbar, Alert, Button } from "@mui/material";
 
-function DispMsgToast({ msg }) {
+function DispMsgToast({ message, variant = 'info', autoHide = true }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (msg && msg !== "No Notification") {
+    if (message) {
       setOpen(true);
     }
-  }, [msg]);
+  }, [message]);
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") return; // prevent close on outside click
+    if (reason === "clickaway" && !autoHide) return;
     setOpen(false);
   };
 
-  return (
-    <>
-      <Button
-        variant="outlined"
-        onClick={() => setOpen(true)}
-        sx={{
-          mb: 2,
-          position: "fixed",
-          top: "200px",
-          right: "30px",
-          backgroundColor: theme.palette.accent.main,
-          color: theme.palette.custom.black.main,
-          border: "none",
-          "&:hover": {
-            backgroundColor: theme.palette.accent.dark,
-          },
-        }}
-      >
-        Notification
-      </Button>
+  // Don't render anything if there's no message
+  if (!message) return null;
 
-      <Snackbar
-        open={open}
-        autoHideDuration={4000}
+  return (
+    <Snackbar
+      open={open}
+      autoHideDuration={autoHide ? 4000 : null}
+      onClose={handleClose}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+    >
+      <Alert
         onClose={handleClose}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleClose}
-          severity={msg.includes("Error") ? "error" : "info"}
-          sx={{ width: "100%" }}
+        severity={variant}
+        elevation={6}
+        sx={{ width: "100%" }}
         >
-          {msg}
+          {message}
         </Alert>
       </Snackbar>
-    </>
   );
 }
+
+export { DispMsgToast as Popup };
 
 export default DispMsgToast;
