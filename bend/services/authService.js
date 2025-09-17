@@ -10,8 +10,8 @@ class AuthService {
         this.transporter = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
-                user: 'Rushi.lukka.315',
-                pass: 'gofmpfbvzldxhosc'
+                user: process.env.EMAIL_AUTH_USER,
+                pass: process.env.EMAIL_AUTH_PASS
             }
         });
     }
@@ -32,18 +32,18 @@ class AuthService {
 
             // Send OTP via email
             await this.transporter.sendMail({
-                from: 'rushi.lukka.315@gmail.com',
+                from: process.env.EMAIL_ID,
                 to: email,
-                subject: 'Your OTP for Davda Associates Authentication',
+                subject: `Your OTP for ${process.env.APP_NAME} Authentication`,
                 html: `
-                    <h2>Welcome to Davda Associates</h2>
+                    <h2>Welcome to ${process.env.APP_NAME}</h2>
                     <p>Your One Time Password (OTP) for authentication is:</p>
                     <h1 style="color: #4CAF50;">${otp}</h1>
                     <p>This OTP will expire in 5 minutes.</p>
                     <p>If you didn't request this OTP, please ignore this email.</p>
                     <br>
                     <p>Best regards,</p>
-                    <p>Davda Associates Team</p>
+                    <p>${process.env.APP_NAME} Team</p>
                 `
             });
 
@@ -80,7 +80,7 @@ class AuthService {
             const token = jwt.sign(
                 { email: email }, // keeping key as email for backward compatibility
                 process.env.JWT_SECRET,
-                { expiresIn: '10d' }
+                { expiresIn: process.env.JWT_SECRET_EXPIRY || '10d' }
             );
 
             return token;
