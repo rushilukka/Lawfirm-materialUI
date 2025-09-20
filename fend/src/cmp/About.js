@@ -30,7 +30,6 @@ export default function About() {
             <Grid item xs={12} md={4} textAlign="center">
               <Button
                 component={Link}
-                to="/contact"
                 variant="contained"
                 color="secondary"
                 sx={{ mt: 2 }}

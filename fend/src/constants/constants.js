@@ -1,4 +1,4 @@
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+export const API_BASE_URL = `${process.env.REACT_APP_API_URL}:${process.env.REACT_APP_API_PORT}` || 'http://localhost:5000';
 export const APP_NAME = process.env.REACT_APP_NAME || 'Davda Associates';
 export const DEFAULT_LOCALE = process.env.REACT_APP_DEFAULT_LOCALE || 'en';
 export const PHONE_NUMBER = process.env.REACT_APP_PHONE_NUMBER;
