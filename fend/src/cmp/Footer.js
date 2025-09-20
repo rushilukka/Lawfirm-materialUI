@@ -20,8 +20,8 @@ import {
   Instagram 
 } from '@mui/icons-material';
 
-const email = 'rushi.lukka.14@gmail.com';
-const phoneNumber = '9428669848';
+const email = 'info@davdaassociates.com';
+const phoneNumber = '1234567890';
 
 const handleOpenGmail = () => {
   window.location.href = `mailto:${email}`;
