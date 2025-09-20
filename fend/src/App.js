@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import HomePage from './cmp/Home';
 import AboutUs from './cmp/About';
 import Services from './cmp/Service';
+import NotFound from './cmp/NotFound';
 import BookSlot from './cmp/Booking';
 import Navbar from './cmp/Navbar';
 import theme from './Theme/theme';
@@ -40,6 +41,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer/>
         </Router>
